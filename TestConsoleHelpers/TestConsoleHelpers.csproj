@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkVersion)" />
+    <PackageReference Include="Shouldly" Version="$(ShouldlyVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConsoleHelpers\ConsoleHelpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

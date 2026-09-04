@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>344e8dd7-5873-4a00-c805-df395c2cdc67</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(MicrosoftExtensionsHostingVersion)" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftExtensionsConfigurationVersion)" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsConfigurationJsonVersion)" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(MicrosoftExtensionsConfigurationUserSecretsVersion)" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsDependencyInjectionVersion)" />
+	<PackageReference Include="Serilog" Version="$(SerilogVersion)" />
+	<PackageReference Include="Serilog.Extensions.Hosting" Version="$(SerilogExtensionsHostingVersion)" />
+	<PackageReference Include="Serilog.Settings.Configuration" Version="$(SerilogSettingsConfigurationVersion)" />
+	<PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsoleVersion)" />
+	<PackageReference Include="Serilog.Sinks.File" Version="$(SerilogSinksFileVersion)" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftEntityFrameworkCoreVersion)" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEntityFrameworkCoreVersion)" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(MicrosoftEntityFrameworkCoreVersion)">
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConsoleHelpers\ConsoleHelpers.csproj" />
+    <ProjectReference Include="..\EFDataLayer\EFDataLayer.csproj" />
+    <ProjectReference Include="..\AppModels\AppModels.csproj" />
+    <ProjectReference Include="..\OrderManagement.Domain\OrderManagement.Domain.csproj" />
+    <ProjectReference Include="..\OrderManagement.Application\OrderManagement.Application.csproj" />
+    <ProjectReference Include="..\OrderManagement.Infrastructure\OrderManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="AppModels/AppModels.csproj" Id="98e4bc62-1f9a-4b91-8992-4b86040620af" />
+  <Project Path="ConsoleAppProject/ConsoleAppProject.csproj" />
+  <Project Path="ConsoleHelpers/ConsoleHelpers.csproj" Id="23e21561-dba0-435a-86f9-95181d94d999" />
+  <Project Path="EFDataLayer/EFDataLayer.csproj" Id="78de56c3-eb8f-4c7c-929b-a011cbd17c7b" />
+  <Project Path="TestConsoleHelpers/TestConsoleHelpers.csproj" Id="550f2f44-1aec-4261-a863-2775a1f520cf" />
+  <Project Path="OrderManagement.Domain/OrderManagement.Domain.csproj" />
+  <Project Path="OrderManagement.Application/OrderManagement.Application.csproj" />
+  <Project Path="OrderManagement.Infrastructure/OrderManagement.Infrastructure.csproj" />
+  <Project Path="OrderManagement.Api/OrderManagement.Api.csproj" />
+  <Project Path="OrderManagement.Tests/OrderManagement.Tests.csproj" />
+</Solution>
