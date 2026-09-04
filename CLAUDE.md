@@ -377,10 +377,8 @@ None currently open.
 
 ## Skills
 
-- **Narration scripts**: Always invoke the `demo-script` skill (via `/demo-script`) when writing a new `ClipNN-DemoSteps.md` narration script under `Instructions/`. Do not write script prose directly without invoking the skill first.
-- **Slide plans**: Always invoke the `slide-plan` skill (via `/slide-plan`) when creating or updating a `ClipNN-SlidePlan.md` file under `Instructions/`.
-- **Editing existing script/slide-plan text**: Use the `script-cleanup` skill (via `/script-cleanup`) when fixing a flagged line or excerpt in an already-written `ClipNN-DemoSteps.md` or `ClipNN-SlidePlan.md`, rather than the `demo-script`/`slide-plan` skills, which are for writing new content.
-- All three skills share one voice/tone rulebook, defined in `demo-script` — `slide-plan` and `script-cleanup` reference it rather than duplicating it. Update rules there first if a new narration correction needs to persist.
+- **`code-walkthrough`** (`.claude/commands/code-walkthrough.md`) — applies one clip's student instructions to the repository exactly as a student would. Invoked as `/code-walkthrough Module NN Clip NN`, or by a student asking for the skill by name. It creates a `walkthrough-moduleNN-clipNN` branch, reads only that clip's `Instructions/ModuleNN/ClipNN-*.md` document, applies every step verbatim, **stops at the first error without fixing it** (reporting the error, the likely cause, and what a fix would take), and **never commits**, so the student reads the diff.
+- This is the only skill in the student repository. Narration, slide-plan, and script-cleanup authoring happens in the separate `EFCore_DDD` repository and deliberately has no counterpart here.
 
 ---
 
