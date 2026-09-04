@@ -21,7 +21,7 @@ Guards reject invalid input and preserve invariant safety.
 ```powershell
 dotnet test --filter "Module=2&Clip=8&Category=Unit"
 ```
-Expected: 0 pass, 15 fail (13 input validation guards + 2 state-transition guards)
+Expected: 2 pass, 13 fail (of 15 total: 13 input validation guards + 2 state-transition guards)
 
 **After implementing this clip:**
 ```powershell
