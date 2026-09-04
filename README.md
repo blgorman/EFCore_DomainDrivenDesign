@@ -118,6 +118,8 @@ Reading that diff is the point of the exercise, so the skill never commits and n
 
 If a clip does fail, that is worth reporting back — the clip documents were validated end to end against this code, so a genuine stop is a defect rather than something you should work around.
 
+Once a clip is applied, `/run-tests` checks it — see [Running a clip's tests with Claude Code](#running-a-clips-tests-with-claude-code).
+
 ---
 
 ## Menu Map
@@ -311,6 +313,24 @@ dotnet test --filter "Module=6&Clip=6"
 Several tests ship commented out under a `//TODO: Module 6 Clip 7` marker — they are part of that clip's exercise.
 
 Some tests are expected to fail against a fresh clone. `Add_ThenGetById_ReturnsOrderWithLines` fails until `OrderRepository` is implemented in Module 4 Clip 4; watching it go from red to green is the point of that clip.
+
+### Running a clip's tests with Claude Code
+
+The second skill in this repository, `run-tests`, builds those trait filters for you and runs them.
+
+```
+/run-tests 2 4          the Module 2 Clip 4 tests
+/run-tests 6            every Module 6 test
+/run-tests              the whole project
+/run-tests 2 4 unit     that clip's unit tests only — no Docker needed
+/run-tests 5 integration
+```
+
+The module number comes first, the clip number second, and both are optional. A clip number on its own is refused, because Clip 4 exists in Module 2 and in Module 4 and they are unrelated tests.
+
+**A clip filter is exact.** `/run-tests 2 4` runs the Module 2 Clip 4 tests and nothing else — it does not also run Clips 2 and 3. Ask for those separately if you want them.
+
+The skill reports the real pass, fail, and skip counts, and it tells you when a filter matched no tests at all rather than reporting an empty run as a pass. It never edits a test, never edits the code under test, and never commits. A red test after a clip is the answer you asked for — the point of `Add_ThenGetById_ReturnsOrderWithLines` is watching it go green when you implement `OrderRepository`.
 
 ### `TestConsoleHelpers`
 
