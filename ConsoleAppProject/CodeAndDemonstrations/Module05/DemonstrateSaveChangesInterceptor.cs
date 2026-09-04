@@ -148,18 +148,18 @@ public static class DemonstrateSaveChangesInterceptor
 
         //TODO: Module 5 Clip 3 — Uncomment the verified-results box below:
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"Interceptor Has Fired — Verified Results",
-        //new[]
-        //{
-        //    $"Events remaining on aggregate:  {order.DomainEvents.Count}  — ClearEvents() was called",
-        //    $"DB row found via FindAsync:      {savedOrder is not null}",
-        //    $"Saved Order Id:                 {savedOrder?.Id}",
-        //    "",
-        //    "The interceptor ran SavedChangesAsync — AFTER the commit.",
-        //    "DB write is final before any handler runs.",
-        //    "If the handler had thrown, the DB row would still exist — no rollback.",
-        //    "(See Clip 5 for the pre-save vs post-save trade-off comparison.)"
-        //}
+        //    "Interceptor Has Fired — Verified Results",
+        //    new[]
+        //    {
+        //        $"Events remaining on aggregate:  {order.DomainEvents.Count}  — ClearEvents() was called",
+        //        $"DB row found via FindAsync:      {savedOrder is not null}",
+        //        $"Saved Order Id:                 {savedOrder?.Id}",
+        //        "",
+        //        "The interceptor ran SavedChangesAsync — AFTER the commit.",
+        //        "DB write is final before any handler runs.",
+        //        "If the handler had thrown, the DB row would still exist — no rollback.",
+        //        "(See Clip 5 for the pre-save vs post-save trade-off comparison.)"
+        //    }
         //));
 
         // Silent cleanup
