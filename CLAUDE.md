@@ -378,7 +378,8 @@ None currently open.
 ## Skills
 
 - **`code-walkthrough`** (`.claude/commands/code-walkthrough.md`) — applies one clip's student instructions to the repository exactly as a student would. Invoked as `/code-walkthrough Module NN Clip NN`, or by a student asking for the skill by name. It creates a `walkthrough-moduleNN-clipNN` branch, reads only that clip's `Instructions/ModuleNN/ClipNN-*.md` document, applies every step verbatim, **stops at the first error without fixing it** (reporting the error, the likely cause, and what a fix would take), and **never commits**, so the student reads the diff.
-- This is the only skill in the student repository. Narration, slide-plan, and script-cleanup authoring happens in the separate `EFCore_DDD` repository and deliberately has no counterpart here.
+- **`run-tests`** (`.claude/commands/run-tests.md`) — runs the test suite scoped to a module and clip. Invoked as `/run-tests 2 4`, `/run-tests 6` for a whole module, `/run-tests` for everything, with an optional `unit` or `integration` word appended. Module and clip are both optional, but a clip number without a module number is rejected as ambiguous (Clip 4 exists in Module 2 and Module 4). A clip filter is exact — `Module=2&Clip=4` runs Clip 4 only, never Clips 2 through 4. It reports the real counts, treats a zero-match filter as zero rather than as a pass, and **leaves failing tests red without fixing them**.
+- These are the only two skills in the student repository. Narration, slide-plan, and script-cleanup authoring happens in the separate `EFCore_DDD` repository and deliberately has no counterpart here.
 
 ---
 
