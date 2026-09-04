@@ -1,0 +1,27 @@
+<Project>
+    <PropertyGroup>
+        <TargetFrameworkVersion>net10.0</TargetFrameworkVersion>
+        <MicrosoftExtensionsHostingVersion>10.0.5</MicrosoftExtensionsHostingVersion>
+		<MicrosoftExtensionsConfigurationVersion>10.0.5</MicrosoftExtensionsConfigurationVersion>
+		<MicrosoftExtensionsConfigurationJsonVersion>10.0.5</MicrosoftExtensionsConfigurationJsonVersion>
+		<MicrosoftExtensionsEnvironmentVariablesConfigurationVersion>10.0.0</MicrosoftExtensionsEnvironmentVariablesConfigurationVersion>
+		<MicrosoftExtensionsConfigurationUserSecretsVersion>10.0.5</MicrosoftExtensionsConfigurationUserSecretsVersion>
+		<MicrosoftExtensionsDependencyInjectionVersion>10.0.5</MicrosoftExtensionsDependencyInjectionVersion>
+		<MicrosoftExtensionsLoggingAbstractionsVersion>10.0.5</MicrosoftExtensionsLoggingAbstractionsVersion>
+		<SerilogVersion>4.3.1</SerilogVersion>
+		<SerilogExtensionsHostingVersion>10.0.0</SerilogExtensionsHostingVersion>
+		<SerilogSettingsConfigurationVersion>10.0.0</SerilogSettingsConfigurationVersion>
+		<SerilogSinksConsoleVersion>6.1.1</SerilogSinksConsoleVersion>
+		<SerilogSinksFileVersion>7.0.0</SerilogSinksFileVersion>
+		<MicrosoftEntityFrameworkCoreVersion>10.0.5</MicrosoftEntityFrameworkCoreVersion>
+		<MicrosoftAspNetCoreOpenApiVersion>10.0.11</MicrosoftAspNetCoreOpenApiVersion>
+		<ArdalisSpecificationVersion>9.0.0</ArdalisSpecificationVersion>
+		<ArdalisSpecificationEFCoreVersion>9.0.0</ArdalisSpecificationEFCoreVersion>
+		<TestcontainersMsSqlVersion>4.4.0</TestcontainersMsSqlVersion>
+		<CoverletCollectorVersion>6.0.4</CoverletCollectorVersion>
+		<MicrosoftNETTestSdkVersion>17.14.1</MicrosoftNETTestSdkVersion>
+		<ShouldlyVersion>4.3.0</ShouldlyVersion>
+		<XunitVersion>2.9.3</XunitVersion>
+		<XunitRunnerVisualStudioVersion>3.1.4</XunitRunnerVisualStudioVersion>
+	</PropertyGroup>
+</Project>
