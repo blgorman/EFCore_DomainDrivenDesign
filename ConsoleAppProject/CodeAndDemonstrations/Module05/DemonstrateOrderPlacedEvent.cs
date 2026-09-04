@@ -162,15 +162,15 @@ public static class DemonstrateOrderPlacedEvent
         //var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
         //
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"Stage 4 — Handler Ran Against a Committed Row",
-        //new[]
-        //{
-        //    $"Saved row Id:              {savedOrder?.Id}",
-        //    $"OrderPlacedEvent.OrderId:  {queuedPlacedEvent.OrderId}",
-        //    "",
-        //    "Handler output:",
-        //    $"  {handlerLine}"
-        //}
+        //    "Stage 4 — Handler Ran Against a Committed Row",
+        //    new[]
+        //    {
+        //        $"Saved row Id:              {savedOrder?.Id}",
+        //        $"OrderPlacedEvent.OrderId:  {queuedPlacedEvent.OrderId}",
+        //        "",
+        //        "Handler output:",
+        //        $"  {handlerLine}"
+        //    }
         //));
 
         Console.WriteLine();
@@ -195,11 +195,11 @@ public static class DemonstrateOrderPlacedEvent
 
         //TODO: Module 5 Clip 6 — Uncomment the Stage 5 cleared-events box below:
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"Stage 5 — Aggregate Is Clean",
-        //new[]
-        //{
-        //    $"Events remaining on aggregate: {order.DomainEvents.Count}"
-        //}
+        //    "Stage 5 — Aggregate Is Clean",
+        //    new[]
+        //    {
+        //        $"Events remaining on aggregate: {order.DomainEvents.Count}"
+        //    }
         //));
 
         // Silent cleanup

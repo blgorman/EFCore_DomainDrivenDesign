@@ -102,7 +102,7 @@ public static class DemonstratePrePostSaveDispatch
         //
         //var order = Order.Place(
         //    SeedDataHelper.CustomerAId,
-        //new[] { (SeedDataHelper.Product1Id, 1, Money.Create(29.99m, "USD")) });
+        //    new[] { (SeedDataHelper.Product1Id, 1, Money.Create(29.99m, "USD")) });
         //
         //var eventsBefore = order.DomainEvents.Count;
         //
@@ -114,23 +114,23 @@ public static class DemonstratePrePostSaveDispatch
         //var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
         //
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"One Save — Measured",
-        //new[]
-        //{
-        //    $"Events on aggregate before save: {eventsBefore}",
-        //    $"Events on aggregate after save:  {eventsAfter}",
-        //    $"DB row exists after save:        {savedRow is not null}",
-        //    $"Saved row Id:                    {savedRow?.Id}",
-        //    "",
-        //    "Handler output:",
-        //    $"  {handlerLine}"
-        //}
+        //    "One Save — Measured",
+        //    new[]
+        //    {
+        //        $"Events on aggregate before save: {eventsBefore}",
+        //        $"Events on aggregate after save:  {eventsAfter}",
+        //        $"DB row exists after save:        {savedRow is not null}",
+        //        $"Saved row Id:                    {savedRow?.Id}",
+        //        "",
+        //        "Handler output:",
+        //        $"  {handlerLine}"
+        //    }
         //));
         //
         //if (savedRow is not null)
         //{
         //    repo.Remove(savedRow);
-        //await repo.SaveAsync();
+        //    await repo.SaveAsync();
         //}
     }
 

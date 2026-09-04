@@ -24,7 +24,7 @@ Reading `OrderRepository.cs` top to bottom, there are five TODO markers:
 `PlaceOrderHandler.cs` has one TODO marker. `DemonstrateOrderRepository.cs` has two TODO markers (Proof 3b and the live `GetByIdAsync` call in Part 3).
 
 ## What To Verify
-- Proof 3b prints `ChangeTracker.Entries().Count()` as `1` for scope A and `0` for scope B — scope B cannot see scope A's unsaved `Add`.
+- Proof 3b prints `ChangeTracker.Entries<Order>().Count()` as `1` for scope A and `0` for scope B — scope B cannot see scope A's unsaved `Add`.
 - The live `GetByIdAsync` call in Part 3 prints a real seeded order's `Id`, `CustomerId` (via the shadow-property accessor), `Status`, `PlacedAt`, and a non-zero `Lines.Count`.
 - `PlaceOrderHandler.HandleAsync` returns a non-zero `order.Id` and the order is actually present in the database afterward (not just held in memory).
 - The solution builds with zero compiler errors — every uncommented block must compile against the real `Order` aggregate, including the shadow `CustomerId` property.

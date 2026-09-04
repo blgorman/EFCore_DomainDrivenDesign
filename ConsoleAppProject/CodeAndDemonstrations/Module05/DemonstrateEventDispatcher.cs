@@ -111,7 +111,7 @@ public static class DemonstrateEventDispatcher
         //
         //var order = Order.Place(
         //    SeedDataHelper.CustomerAId,
-        //new[] { (SeedDataHelper.Product1Id, 2, Money.Create(29.99m, "USD")) });
+        //    new[] { (SeedDataHelper.Product1Id, 2, Money.Create(29.99m, "USD")) });
         //
         //orderingContext.Orders.Add(order);
         //orderingContext.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
@@ -128,24 +128,24 @@ public static class DemonstrateEventDispatcher
         //
         //using (var dispatchScopeBeforeSave = dispatchProvider.CreateScope())
         //{
-        //var dispatcherBeforeSave = dispatchScopeBeforeSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
-        //await dispatcherBeforeSave.DispatchAsync(shippedEvent);
+        //    var dispatcherBeforeSave = dispatchScopeBeforeSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
+        //    await dispatcherBeforeSave.DispatchAsync(shippedEvent);
         //}
         //
         //var statusBeforeSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
         //var handlerLineBeforeSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
         //
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"Dispatched Before Save",
-        //new[]
-        //{
-        //    $"OrderId:                      {shippedEvent.OrderId}",
-        //    $"Aggregate Status (in memory): {order.Status}",
-        //    $"Orders table Status (query):  {statusBeforeSave}",
-        //    "",
-        //    "Handler output:",
-        //    $"  {handlerLineBeforeSave}"
-        //}
+        //    "Dispatched Before Save",
+        //    new[]
+        //    {
+        //        $"OrderId:                      {shippedEvent.OrderId}",
+        //        $"Aggregate Status (in memory): {order.Status}",
+        //        $"Orders table Status (query):  {statusBeforeSave}",
+        //        "",
+        //        "Handler output:",
+        //        $"  {handlerLineBeforeSave}"
+        //    }
         //));
 
         Console.WriteLine();
@@ -173,24 +173,24 @@ public static class DemonstrateEventDispatcher
         //
         //using (var dispatchScopeAfterSave = dispatchProvider.CreateScope())
         //{
-        //var dispatcherAfterSave = dispatchScopeAfterSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
-        //await dispatcherAfterSave.DispatchAsync(shippedEvent);
+        //    var dispatcherAfterSave = dispatchScopeAfterSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
+        //    await dispatcherAfterSave.DispatchAsync(shippedEvent);
         //}
         //
         //var statusAfterSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
         //var handlerLineAfterSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
         //
         //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //"Dispatched After Save",
-        //new[]
-        //{
-        //    $"OrderId:                      {shippedEvent.OrderId}",
-        //    $"Aggregate Status (in memory): {order.Status}",
-        //    $"Orders table Status (query):  {statusAfterSave}",
-        //    "",
-        //    "Handler output:",
-        //    $"  {handlerLineAfterSave}"
-        //}
+        //    "Dispatched After Save",
+        //    new[]
+        //    {
+        //        $"OrderId:                      {shippedEvent.OrderId}",
+        //        $"Aggregate Status (in memory): {order.Status}",
+        //        $"Orders table Status (query):  {statusAfterSave}",
+        //        "",
+        //        "Handler output:",
+        //        $"  {handlerLineAfterSave}"
+        //    }
         //));
     }
 
@@ -199,14 +199,14 @@ public static class DemonstrateEventDispatcher
     //TODO: Module 5 Clip 4 — Uncomment the projection reader below:
     //private static async Task<string> ReadProjectionStatusAsync(ServiceProvider provider, int orderId)
     //{
-    //using var scope = provider.CreateScope();
-    //var shippingContext = scope.ServiceProvider.GetRequiredService<ShippingContext>();
+    //    using var scope = provider.CreateScope();
+    //    var shippingContext = scope.ServiceProvider.GetRequiredService<ShippingContext>();
     //
-    //var row = await shippingContext.Shipments
-    //    .AsNoTracking()
-    //    .FirstOrDefaultAsync(s => s.Id == orderId);
+    //    var row = await shippingContext.Shipments
+    //        .AsNoTracking()
+    //        .FirstOrDefaultAsync(s => s.Id == orderId);
     //
-    //return row is null ? "(no row)" : row.Status.ToString();
+    //    return row is null ? "(no row)" : row.Status.ToString();
     //}
 
     private static ServiceProvider CreateCapturingDispatchProvider(OrderingContext source, List<string> handlerOutput)

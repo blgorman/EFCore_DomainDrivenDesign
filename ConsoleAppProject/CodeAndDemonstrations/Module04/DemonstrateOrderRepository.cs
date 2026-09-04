@@ -105,8 +105,8 @@ public static class DemonstrateOrderRepository
             ctxDirect.Orders.Add(order);
 
             var repoCtx           = ctxField.GetValue(repo) as OrderingContext;
-            var entriesViaDirect  = ctxDirect.ChangeTracker.Entries().Count();
-            var entriesViaRepo    = repoCtx!.ChangeTracker.Entries().Count();
+            var entriesViaDirect  = ctxDirect.ChangeTracker.Entries<Order>().Count();
+            var entriesViaRepo    = repoCtx!.ChangeTracker.Entries<Order>().Count();
 
             Console.Write(OutputHelpers.BoxedArrayWithTitle(
                 "Proof 2 — add directly to ctxDirect; read ChangeTracker through repo._ctx",
@@ -115,8 +115,8 @@ public static class DemonstrateOrderRepository
                     "ctxDirect.Orders.Add(newOrder) — added via the raw DbContext, NOT through repo.Add().",
                     "repo.Add() was never called. repo.SaveAsync() was never called.",
                     "",
-                    $"ctxDirect.ChangeTracker.Entries().Count():  {entriesViaDirect}",
-                    $"repo._ctx.ChangeTracker.Entries().Count():  {entriesViaRepo}",
+                    $"ctxDirect.ChangeTracker.Entries<Order>().Count():  {entriesViaDirect}",
+                    $"repo._ctx.ChangeTracker.Entries<Order>().Count():  {entriesViaRepo}",
                     "",
                     "Both show 1 pending entry.",
                     "The repo's internal DbContext already sees the Order even though",
@@ -184,8 +184,8 @@ public static class DemonstrateOrderRepository
         //    });
         //    repoA.Add(pendingOrder);
         //
-        //    var scopeAPending = ctxA.ChangeTracker.Entries().Count();
-        //    var scopeBPending = ctxB.ChangeTracker.Entries().Count();
+        //    var scopeAPending = ctxA.ChangeTracker.Entries<Order>().Count();
+        //    var scopeBPending = ctxB.ChangeTracker.Entries<Order>().Count();
         //
         //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
         //        "Proof 3b — ChangeTracker isolation: scope A's unsaved work is invisible to scope B",
@@ -193,11 +193,11 @@ public static class DemonstrateOrderRepository
         //        {
         //            "Action: call repoA.Add(newOrder) — no SaveAsync, no INSERT yet.",
         //            "",
-        //            $"Scope A ChangeTracker.Entries().Count():  {scopeAPending}",
-        //            "  => 1: the new Order is staged as EntityState.Added in scope A's DbContext.",
+        //            $"Scope A ChangeTracker.Entries<Order>().Count():  {scopeAPending}",
+        //            $"  => {scopeAPending}: the new Order is staged as EntityState.Added in scope A's DbContext.",
         //            "",
-        //            $"Scope B ChangeTracker.Entries().Count():  {scopeBPending}",
-        //            "  => 0: scope B's DbContext has no knowledge of scope A's pending work.",
+        //            $"Scope B ChangeTracker.Entries<Order>().Count():  {scopeBPending}",
+        //            $"  => {scopeBPending}: scope B's DbContext has no knowledge of scope A's pending work.",
         //            "",
         //            "Scope B cannot see, undo, or accidentally save what scope A is doing.",
         //            "This is not a hash comparison — it is a live ChangeTracker state read."
