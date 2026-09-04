@@ -92,6 +92,32 @@ An instruction document lists the demo class it drives, the files to edit, what 
 
 `Instructions/` covers Modules 2 through 7. Module 1 is conceptual and has no code exercise beyond running the anemic model demo.
 
+### Applying a clip with Claude Code
+
+If you work in Claude Code, this repository ships a `code-walkthrough` skill that applies one clip's instructions for you, so you can read the resulting diff instead of typing every change yourself.
+
+Ask for it by name:
+
+> use the code-walkthrough skill to implement the student instructions for Module 5, Clip 3
+
+or invoke it directly:
+
+```
+/code-walkthrough Module 5 Clip 3
+```
+
+One clip per run. The skill:
+
+1. Confirms the working tree is clean, then creates a branch named `walkthrough-module05-clip03`.
+2. Opens only that clip's document — never a later clip, never the finished solution.
+3. Applies every step verbatim and builds where the document says to build.
+4. **Stops at the first error and does not fix it**, reporting the error, the likely cause, and what a fix would take.
+5. Reports what changed and **leaves everything uncommitted**, so you can read the diff.
+
+Reading that diff is the point of the exercise, so the skill never commits and never pushes. Whether to keep the branch, merge it, or throw it away is your call.
+
+If a clip does fail, that is worth reporting back — the clip documents were validated end to end against this code, so a genuine stop is a defect rather than something you should work around.
+
 ---
 
 ## Menu Map
@@ -408,7 +434,7 @@ What the API *is* good for as shipped: it is a valid EF Core design-time host, s
 | Migration commands fail with "more than one DbContext" | Add `--context OrderingContext` (or `ShippingContext`) along with `--project` and `--startup-project`. |
 | `OrderManagement.Api` returns 404 for every order | Expected until Module 4 Clip 4 implements `OrderRepository`. See [The API Project](#the-api-project). |
 | API request fails with an invalid object name | The API uses its own database (`OrderManagementDDD`) and never migrates at startup. Run `dotnet ef database update --startup-project OrderManagement.Api --context OrderingContext`. |
-| SQL error 56, `Unable to load the SQLUserInstance.dll` | A broken LocalDB client install, not a repo problem. Try `sqllocaldb start mssqllocaldb`; if that does not help, repair the SQL Server Express LocalDB feature or point the connection string at another SQL Server instance. |
+| SQL error 193 / SNI error 56, `Unable to load the SQLUserInstance.dll`, `ClientConnectionId` all zeros | Architecture mismatch, not a broken install. LocalDB loads `SQLUserInstance.dll` only in **x64** processes, so on Windows ARM64 an arm64 process cannot connect. Run anything that touches the database as x64: `dotnet run -a x64 --project ConsoleAppProject`. Also confirm the instance is up with `sqllocaldb start mssqllocaldb`. |
 | Integration tests fail with `exec format error` | An ARM machine pulled the amd64 SQL Server image. `MsSqlFixture` already substitutes Azure SQL Edge on ARM — make sure you are on current code and that Docker is not forcing a platform. |
 | Your work disappeared from the database | By design — every run calls `EnsureDeletedAsync()` before applying migrations. |
 
