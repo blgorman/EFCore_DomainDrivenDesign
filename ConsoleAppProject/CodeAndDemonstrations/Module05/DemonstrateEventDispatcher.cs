@@ -94,59 +94,48 @@ public static class DemonstrateEventDispatcher
             OutputHelpers.SectionBanner("Step 3 — Manually Dispatch a Real OrderShippedEvent"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 5 Clip 4 — Delete this Not Yet Implemented box:
+
+        var orderingContext = scope.ServiceProvider.GetRequiredService<OrderingContext>();
+        await SeedDataHelper.EnsureCustomersAsync(orderingContext);
+
+        var order = Order.Place(
+            SeedDataHelper.CustomerAId,
+            new[] { (SeedDataHelper.Product1Id, 2, Money.Create(29.99m, "USD")) });
+
+        orderingContext.Orders.Add(order);
+        orderingContext.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        await orderingContext.SaveChangesAsync();
+
+        order.Process();
+        order.Confirm();
+        order.Ship();
+
+        var shippedEvent = order.DomainEvents.OfType<OrderShippedEvent>().Single();
+
+        var handlerOutput = new List<string>();
+        using var dispatchProvider = CreateCapturingDispatchProvider(orderingContext, handlerOutput);
+
+        using (var dispatchScopeBeforeSave = dispatchProvider.CreateScope())
+        {
+            var dispatcherBeforeSave = dispatchScopeBeforeSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
+            await dispatcherBeforeSave.DispatchAsync(shippedEvent);
+        }
+
+        var statusBeforeSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
+        var handlerLineBeforeSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "Dispatched Before Save",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 4.",
-                "Open DemonstrateEventDispatcher.cs and uncomment the //TODO: Module 5 Clip 4 block.",
-                "Prerequisite: DomainEventDispatcher.DispatchAsync and OrderShippedEventHandler.HandleAsync."
+                $"OrderId:                      {shippedEvent.OrderId}",
+                $"Aggregate Status (in memory): {order.Status}",
+                $"Orders table Status (query):  {statusBeforeSave}",
+                "",
+                "Handler output:",
+                $"  {handlerLineBeforeSave}"
             }
         ));
-
-        //TODO: Module 5 Clip 4 — Uncomment the Step 3 dispatch block below:
-        //var orderingContext = scope.ServiceProvider.GetRequiredService<OrderingContext>();
-        //await SeedDataHelper.EnsureCustomersAsync(orderingContext);
-        //
-        //var order = Order.Place(
-        //    SeedDataHelper.CustomerAId,
-        //    new[] { (SeedDataHelper.Product1Id, 2, Money.Create(29.99m, "USD")) });
-        //
-        //orderingContext.Orders.Add(order);
-        //orderingContext.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
-        //await orderingContext.SaveChangesAsync();
-        //
-        //order.Process();
-        //order.Confirm();
-        //order.Ship();
-        //
-        //var shippedEvent = order.DomainEvents.OfType<OrderShippedEvent>().Single();
-        //
-        //var handlerOutput = new List<string>();
-        //using var dispatchProvider = CreateCapturingDispatchProvider(orderingContext, handlerOutput);
-        //
-        //using (var dispatchScopeBeforeSave = dispatchProvider.CreateScope())
-        //{
-        //    var dispatcherBeforeSave = dispatchScopeBeforeSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
-        //    await dispatcherBeforeSave.DispatchAsync(shippedEvent);
-        //}
-        //
-        //var statusBeforeSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
-        //var handlerLineBeforeSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Dispatched Before Save",
-        //    new[]
-        //    {
-        //        $"OrderId:                      {shippedEvent.OrderId}",
-        //        $"Aggregate Status (in memory): {order.Status}",
-        //        $"Orders table Status (query):  {statusBeforeSave}",
-        //        "",
-        //        "Handler output:",
-        //        $"  {handlerLineBeforeSave}"
-        //    }
-        //));
 
         Console.WriteLine();
         InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
@@ -157,57 +146,45 @@ public static class DemonstrateEventDispatcher
             OutputHelpers.SectionBanner("Step 4 — Save the Ship Transition, Then Dispatch the Same Event Again"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 5 Clip 4 — Delete this Not Yet Implemented box:
+
+        await orderingContext.SaveChangesAsync();
+
+        using (var dispatchScopeAfterSave = dispatchProvider.CreateScope())
+        {
+            var dispatcherAfterSave = dispatchScopeAfterSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
+            await dispatcherAfterSave.DispatchAsync(shippedEvent);
+        }
+
+        var statusAfterSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
+        var handlerLineAfterSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "Dispatched After Save",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 4.",
-                "Open DemonstrateEventDispatcher.cs and uncomment the //TODO: Module 5 Clip 4 block.",
-                "Prerequisite: DomainEventDispatcher.DispatchAsync and OrderShippedEventHandler.HandleAsync."
+                $"OrderId:                      {shippedEvent.OrderId}",
+                $"Aggregate Status (in memory): {order.Status}",
+                $"Orders table Status (query):  {statusAfterSave}",
+                "",
+                "Handler output:",
+                $"  {handlerLineAfterSave}"
             }
         ));
-
-        //TODO: Module 5 Clip 4 — Uncomment the Step 4 dispatch block below:
-        //await orderingContext.SaveChangesAsync();
-        //
-        //using (var dispatchScopeAfterSave = dispatchProvider.CreateScope())
-        //{
-        //    var dispatcherAfterSave = dispatchScopeAfterSave.ServiceProvider.GetRequiredService<DomainEventDispatcher>();
-        //    await dispatcherAfterSave.DispatchAsync(shippedEvent);
-        //}
-        //
-        //var statusAfterSave = await ReadProjectionStatusAsync(dispatchProvider, shippedEvent.OrderId);
-        //var handlerLineAfterSave = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Dispatched After Save",
-        //    new[]
-        //    {
-        //        $"OrderId:                      {shippedEvent.OrderId}",
-        //        $"Aggregate Status (in memory): {order.Status}",
-        //        $"Orders table Status (query):  {statusAfterSave}",
-        //        "",
-        //        "Handler output:",
-        //        $"  {handlerLineAfterSave}"
-        //    }
-        //));
     }
 
     private const string NoHandlerOutput = "(handler produced no output)";
 
-    //TODO: Module 5 Clip 4 — Uncomment the projection reader below:
-    //private static async Task<string> ReadProjectionStatusAsync(ServiceProvider provider, int orderId)
-    //{
-    //    using var scope = provider.CreateScope();
-    //    var shippingContext = scope.ServiceProvider.GetRequiredService<ShippingContext>();
-    //
-    //    var row = await shippingContext.Shipments
-    //        .AsNoTracking()
-    //        .FirstOrDefaultAsync(s => s.Id == orderId);
-    //
-    //    return row is null ? "(no row)" : row.Status.ToString();
-    //}
+    private static async Task<string> ReadProjectionStatusAsync(ServiceProvider provider, int orderId)
+    {
+        using var scope = provider.CreateScope();
+        var shippingContext = scope.ServiceProvider.GetRequiredService<ShippingContext>();
+
+        var row = await shippingContext.Shipments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == orderId);
+
+        return row is null ? "(no row)" : row.Status.ToString();
+    }
 
     private static ServiceProvider CreateCapturingDispatchProvider(OrderingContext source, List<string> handlerOutput)
     {

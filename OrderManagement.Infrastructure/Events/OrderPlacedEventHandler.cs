@@ -14,8 +14,7 @@ public class OrderPlacedEventHandler : IDomainEventHandler<OrderPlacedEvent>
 
     public async Task HandleAsync(OrderPlacedEvent domainEvent, CancellationToken ct = default)
     {
-        //TODO: Module 5 Clip 4 — Uncomment the log line below:
-        //_logger.LogInformation("Order placed: {OrderId}", domainEvent.OrderId);
+        _logger.LogInformation("Order placed: {OrderId}", domainEvent.OrderId);
         await Task.CompletedTask;
     }
 
