@@ -31,8 +31,7 @@ public class MainMenu : BaseMenu
         "Module 4: Repository Pattern",
         "Module 5: Domain Events",
         "Module 6: Specification Pattern",
-        //TODO: Module 7 — Uncomment the menu entry below to enable the Module 7 demos:
-        //"Module 7: CQRS and Outbox Next Steps",
+        "Module 7: CQRS and Outbox Next Steps",
         "Exit"
     };
 
@@ -49,8 +48,7 @@ public class MainMenu : BaseMenu
             case 4: next = _module4Menu; title = "Module 4: Repository Pattern"; break;
             case 5: next = _module5Menu; title = "Module 5: Domain Events"; break;
             case 6: next = _module6Menu; title = "Module 6: Specification Pattern"; break;
-            //TODO: Module 7 — Uncomment the case below to enable the Module 7 demos:
-            //case 7: next = new Module7NextStepsMenu(_serviceProvider); title = "Module 7: CQRS and Outbox Next Steps"; break;
+            case 7: next = new Module7NextStepsMenu(_serviceProvider); title = "Module 7: CQRS and Outbox Next Steps"; break;
             default: return false;
         }
 
