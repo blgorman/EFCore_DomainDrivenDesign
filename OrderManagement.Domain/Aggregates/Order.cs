@@ -15,11 +15,8 @@ public class Order : AggregateRoot
     public DateTime PlacedAt { get; set; }
     public decimal Total { get; set; }
 
-    //TODO: Module 2 Clip 2 — Replace this line
-    public List<OrderLine> Lines { get; set; } = new();
-    //  with:
-    //private readonly List<OrderLine> _lines = new();
-    //public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
+    private readonly List<OrderLine> _lines = new();
+    public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
 
     //Module 2 Clip 7 — This private constructor exists for EF Core materialization.
     // EF bypasses the factory method and writes directly to backing fields when reloading from the DB.
@@ -73,14 +70,13 @@ public class Order : AggregateRoot
 
     public void AddLine(int productId, int quantity, Money unitPrice)
     {
-        //TODO: Module 2 Clip 2 — Change Lines.Add to _lines.Add after adding the private backing field.
         //TODO: Module 2 Clip 8 — Add guard clauses (uses _lines, complete Clip 2 first):
         //if (productId <= 0)
         //    throw new ArgumentException("A valid product ID is required.", nameof(productId));
         //if (_lines.Any(l => l.ProductId == productId))
         //    throw new InvalidOperationException($"Product {productId} is already on this order. Update the existing line's quantity instead.");
 
-        Lines.Add(new OrderLine(productId, quantity, unitPrice));
+        _lines.Add(new OrderLine(productId, quantity, unitPrice));
         //TODO: Module 2 Clip 8 — Keep Total synchronized after AddLine:
         //Total = Money.Create(Lines.Sum(l => l.LineTotal.Amount), unitPrice.Currency);
     }
