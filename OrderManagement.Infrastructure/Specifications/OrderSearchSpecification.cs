@@ -8,13 +8,12 @@ public class OrderSearchSpecification : Specification<Order>
 {
     public OrderSearchSpecification(OrderStatus? status, int? minLines)
     {
-        //TODO: Module 6 Clip 6 — Uncomment the implementation below:
-        //if (status.HasValue)
-        //    Query.Where(o => o.Status == status.Value);
-        //
-        //if (minLines.HasValue)
-        //    Query.Where(o => o.Lines.Count >= minLines.Value);
-        //
-        //Query.Include(o => o.Lines).OrderByDescending(o => o.PlacedAt);
+        if (status.HasValue)
+            Query.Where(o => o.Status == status.Value);
+
+        if (minLines.HasValue)
+            Query.Where(o => o.Lines.Count >= minLines.Value);
+
+        Query.Include(o => o.Lines).OrderByDescending(o => o.PlacedAt);
     }
 }
