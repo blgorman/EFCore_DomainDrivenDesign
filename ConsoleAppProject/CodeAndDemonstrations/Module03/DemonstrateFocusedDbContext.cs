@@ -84,50 +84,38 @@ public static class DemonstrateFocusedDbContext
         Console.WriteLine();
         //----------------------------------------------------------------//
 
-        //TODO: Module 3 Clip 4 — Step 1: Delete this entire "Not Yet Implemented" box 
+
+        // --- Screen 4: ShippingContext entity types from the EF model ---
+        using var shippingScope = serviceProvider.CreateScope();
+        var shippingCtx = shippingScope.ServiceProvider.GetRequiredService<ShippingContext>();
+
+        var shippingTypes = shippingCtx.Model
+            .GetEntityTypes()
+            .Select(e => e.ClrType.Name)
+            .OrderBy(n => n)
+            .ToArray();
+
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("ShippingContext — Registered Entity Types"), ConsoleColor.DarkBlue);
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen will work after completing Module 3 Clip 4.",
-                "Open DemonstrateFocusedDbContext.cs and uncomment the //TODO: Module 3 Clip 4 block.",
-                "Prerequisite: ShippingContext must have DbSet<ShipmentReadModel> and ApplyConfiguration set up."
-            }
+            $"shippingCtx.Model.GetEntityTypes()  — {shippingTypes.Length} type",
+            shippingTypes
         ));
 
-        //TODO: Module 3 Clip 4 — Step 2: Uncomment this block after adding DbSet<ShipmentReadModel> and ApplyConfiguration to ShippingContext.
-        //// --- Screen 4: ShippingContext entity types from the EF model ---
-        //using var shippingScope = serviceProvider.CreateScope();
-        //var shippingCtx = shippingScope.ServiceProvider.GetRequiredService<ShippingContext>();
-        //
-        //var shippingTypes = shippingCtx.Model
-        //    .GetEntityTypes()
-        //    .Select(e => e.ClrType.Name)
-        //    .OrderBy(n => n)
-        //    .ToArray();
-        //
-        //OutputHelpers.WriteColored(OutputHelpers.SectionBanner("ShippingContext — Registered Entity Types"), ConsoleColor.DarkBlue);
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"shippingCtx.Model.GetEntityTypes()  — {shippingTypes.Length} type",
-        //    shippingTypes
-        //));
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "ShippingContext — What Is Registered and What Is Deliberately Absent",
-        //    new[]
-        //    {
-        //        "REGISTERED (DbSet<T> declared on this context):",
-        //        "  DbSet<ShipmentReadModel>  Shipments  — the only type Shipping owns",
-        //        "",
-        //        "DELIBERATELY ABSENT:",
-        //        "  Order, OrderLine, Customer — Shipping has no business writing these.",
-        //        "  No CustomerId, no Lines collection, no Money value object here.",
-        //        "",
-        //        "ShippingContext cannot accidentally query or update Order-domain data.",
-        //        "It is isolated from the Ordering bounded context by design."
-        //    }
-        //));
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "ShippingContext — What Is Registered and What Is Deliberately Absent",
+            new[]
+            {
+                "REGISTERED (DbSet<T> declared on this context):",
+                "  DbSet<ShipmentReadModel>  Shipments  — the only type Shipping owns",
+                "",
+                "DELIBERATELY ABSENT:",
+                "  Order, OrderLine, Customer — Shipping has no business writing these.",
+                "  No CustomerId, no Lines collection, no Money value object here.",
+                "",
+                "ShippingContext cannot accidentally query or update Order-domain data.",
+                "It is isolated from the Ordering bounded context by design."
+            }
+        ));
 
         await Task.CompletedTask;
     }
