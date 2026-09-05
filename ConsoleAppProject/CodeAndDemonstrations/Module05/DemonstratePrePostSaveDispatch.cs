@@ -81,57 +81,46 @@ public static class DemonstratePrePostSaveDispatch
             OutputHelpers.SectionBanner("Step 3 — One Save: Dispatch, Clear, and Commit"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 5 Clip 5 — Delete this Not Yet Implemented box:
+
+        var handlerOutput = new List<string>();
+        using var dispatchProvider = CreateCapturingProvider(connectionString, handlerOutput);
+        using var dispatchScope = dispatchProvider.CreateScope();
+
+        var context = dispatchScope.ServiceProvider.GetRequiredService<OrderingContext>();
+        var repo = dispatchScope.ServiceProvider.GetRequiredService<IOrderRepository>();
+
+        var order = Order.Place(
+            SeedDataHelper.CustomerAId,
+            new[] { (SeedDataHelper.Product1Id, 1, Money.Create(29.99m, "USD")) });
+
+        var eventsBefore = order.DomainEvents.Count;
+
+        repo.Add(order, SeedDataHelper.CustomerAId);
+        await repo.SaveAsync();
+
+        var eventsAfter = order.DomainEvents.Count;
+        var savedRow = await context.Orders.FindAsync(order.Id);
+        var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "One Save — Measured",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 5.",
-                "Open DemonstratePrePostSaveDispatch.cs and uncomment the //TODO: Module 5 Clip 5 block.",
-                "Prerequisite: requires having completed Module 5 Clip 3 and Clip 4 — interceptor, dispatcher, and handlers."
+                $"Events on aggregate before save: {eventsBefore}",
+                $"Events on aggregate after save:  {eventsAfter}",
+                $"DB row exists after save:        {savedRow is not null}",
+                $"Saved row Id:                    {savedRow?.Id}",
+                "",
+                "Handler output:",
+                $"  {handlerLine}"
             }
         ));
 
-        //TODO: Module 5 Clip 5 — Uncomment the Step 3 measurement block below:
-        //var handlerOutput = new List<string>();
-        //using var dispatchProvider = CreateCapturingProvider(connectionString, handlerOutput);
-        //using var dispatchScope = dispatchProvider.CreateScope();
-        //
-        //var context = dispatchScope.ServiceProvider.GetRequiredService<OrderingContext>();
-        //var repo = dispatchScope.ServiceProvider.GetRequiredService<IOrderRepository>();
-        //
-        //var order = Order.Place(
-        //    SeedDataHelper.CustomerAId,
-        //    new[] { (SeedDataHelper.Product1Id, 1, Money.Create(29.99m, "USD")) });
-        //
-        //var eventsBefore = order.DomainEvents.Count;
-        //
-        //repo.Add(order, SeedDataHelper.CustomerAId);
-        //await repo.SaveAsync();
-        //
-        //var eventsAfter = order.DomainEvents.Count;
-        //var savedRow = await context.Orders.FindAsync(order.Id);
-        //var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "One Save — Measured",
-        //    new[]
-        //    {
-        //        $"Events on aggregate before save: {eventsBefore}",
-        //        $"Events on aggregate after save:  {eventsAfter}",
-        //        $"DB row exists after save:        {savedRow is not null}",
-        //        $"Saved row Id:                    {savedRow?.Id}",
-        //        "",
-        //        "Handler output:",
-        //        $"  {handlerLine}"
-        //    }
-        //));
-        //
-        //if (savedRow is not null)
-        //{
-        //    repo.Remove(savedRow);
-        //    await repo.SaveAsync();
-        //}
+        if (savedRow is not null)
+        {
+            repo.Remove(savedRow);
+            await repo.SaveAsync();
+        }
     }
 
     private const string NoHandlerOutput = "(handler produced no output)";
