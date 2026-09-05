@@ -96,33 +96,31 @@ public class SpecificationTests
         unfilteredOrders.Count.ShouldBe(2);
     }
 
-    //TODO: Module 6 Clip 7 — Uncomment the LargeOrdersSpecification test below:
-    //[Fact]
-    //[Trait("Clip", "7")]
-    //public void LargeOrdersSpec_ReturnsOnlyOrdersAtOrAboveTheMinimum()
-    //{
-    //    // CreateOrder gives every line a quantity of 1 at 10.00, so the total is 10.00 per line.
-    //    var smallOrder = CreateOrder(OrderStatus.Placed, lineCount: 1);   // total 10.00
-    //    var largeOrder = CreateOrder(OrderStatus.Placed, lineCount: 3);   // total 30.00
-    //    var allOrders  = new List<Order> { smallOrder, largeOrder };
-    //
-    //    var largeOrdersSpec = new LargeOrdersSpecification(25m);
-    //    var largeOrders     = largeOrdersSpec.Evaluate(allOrders).ToList();
-    //
-    //    largeOrders.ShouldHaveSingleItem();
-    //    largeOrders[0].Total.Amount.ShouldBe(30m);
-    //}
+    [Fact]
+    [Trait("Clip", "7")]
+    public void LargeOrdersSpec_ReturnsOnlyOrdersAtOrAboveTheMinimum()
+    {
+        // CreateOrder gives every line a quantity of 1 at 10.00, so the total is 10.00 per line.
+        var smallOrder = CreateOrder(OrderStatus.Placed, lineCount: 1);   // total 10.00
+        var largeOrder = CreateOrder(OrderStatus.Placed, lineCount: 3);   // total 30.00
+        var allOrders  = new List<Order> { smallOrder, largeOrder };
 
-    //TODO: Module 6 Clip 7 — Uncomment the shadow-property boundary test below:
-    //[Fact]
-    //[Trait("Clip", "7")]
-    //public void OrdersByCustomerSpec_CannotBeEvaluatedInMemory()
-    //{
-    //    var allOrders            = new List<Order> { CreateOrder(OrderStatus.Placed) };
-    //    var ordersByCustomerSpec = new OrdersByCustomerSpecification(1);
-    //
-    //    var evaluationException = Should.Throw<InvalidOperationException>(
-    //        () => ordersByCustomerSpec.Evaluate(allOrders).ToList());
-    //    evaluationException.Message.ShouldContain("may only be used within Entity Framework LINQ queries");
-    //}
+        var largeOrdersSpec = new LargeOrdersSpecification(25m);
+        var largeOrders     = largeOrdersSpec.Evaluate(allOrders).ToList();
+
+        largeOrders.ShouldHaveSingleItem();
+        largeOrders[0].Total.Amount.ShouldBe(30m);
+    }
+
+    [Fact]
+    [Trait("Clip", "7")]
+    public void OrdersByCustomerSpec_CannotBeEvaluatedInMemory()
+    {
+        var allOrders            = new List<Order> { CreateOrder(OrderStatus.Placed) };
+        var ordersByCustomerSpec = new OrdersByCustomerSpecification(1);
+
+        var evaluationException = Should.Throw<InvalidOperationException>(
+            () => ordersByCustomerSpec.Evaluate(allOrders).ToList());
+        evaluationException.Message.ShouldContain("may only be used within Entity Framework LINQ queries");
+    }
 }
