@@ -65,11 +65,8 @@ public static class DemonstrateCqrsReadModel
             $"repository.GetByIdAsync({firstOrderId})",
             new[]
             {
-                //TODO: Module 7 Clip 4 — Delete the line below and uncomment the //WITH: lines (requires having completed Module 2 Clip 4, which changes Total to Money):
-                $"Order {orderAggregate.Id}: Status {orderAggregate.Status}, {orderAggregate.Lines.Count} line(s)",
-                //WITH:
-                //$"Order {orderAggregate.Id}: Status {orderAggregate.Status}, {orderAggregate.Lines.Count} line(s), " +
-                //$"Total {orderAggregate.Total.Amount} {orderAggregate.Total.Currency}",
+                $"Order {orderAggregate.Id}: Status {orderAggregate.Status}, {orderAggregate.Lines.Count} line(s), " +
+                $"Total {orderAggregate.Total.Amount} {orderAggregate.Total.Currency}",
                 $"ChangeTracker holds {trackedAfterWrite} entries: the Order and its {orderAggregate.Lines.Count} line(s).",
                 "",
                 "The aggregate is change-tracked. Process, Confirm, Ship, and Cancel",
