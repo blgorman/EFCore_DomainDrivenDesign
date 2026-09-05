@@ -20,10 +20,8 @@ public class PlaceOrderHandler
         // Domain invariants (non-empty lines, valid customer/product IDs) are enforced by Order.Place().
         var lines = cmd.Lines.Select(l => (l.ProductId, l.Quantity, Money.Create(l.UnitPrice, l.Currency)));
         var order = Order.Place(cmd.CustomerId, lines);
-        //TODO: Module 4 Clip 4 — Uncomment after implementing the IOrderRepository.Add(order, customerId) overload and SaveAsync.
-        // The overload sets the shadow CustomerId FK, which this handler cannot set itself (it holds only IOrderRepository, not the context):
-        //_repo.Add(order, cmd.CustomerId);
-        //await _repo.SaveAsync(ct);
+        _repo.Add(order, cmd.CustomerId);
+        await _repo.SaveAsync(ct);
         return order.Id;
     }
 }
