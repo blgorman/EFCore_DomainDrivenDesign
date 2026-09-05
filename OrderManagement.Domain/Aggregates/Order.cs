@@ -20,18 +20,15 @@ public class Order : AggregateRoot
 
     public static Order Place(int customerId, IEnumerable<(int productId, int quantity, Money unitPrice)> lines)
     {
-        //TODO: Module 2 Clip 8 — Customer ID guard:
-        //if (customerId <= 0)
-        //    throw new ArgumentException("A valid customer ID is required.", nameof(customerId));
+        if (customerId <= 0)
+            throw new ArgumentException("A valid customer ID is required.", nameof(customerId));
 
-        //TODO: Module 2 Clip 8 — Lines cannot be null
-        //ArgumentNullException.ThrowIfNull(lines);
+        ArgumentNullException.ThrowIfNull(lines);
 
         var linesList = lines.ToList();
 
-        //TODO: Module 2 Clip 8 — Lines List can't be empty
-        //if (linesList.Count == 0)
-        //    throw new ArgumentException("An order must have at least one line.", nameof(lines));
+        if (linesList.Count == 0)
+            throw new ArgumentException("An order must have at least one line.", nameof(lines));
 
         var order = new Order
         {
@@ -45,10 +42,7 @@ public class Order : AggregateRoot
             order.AddLine(productId, quantity, unitPrice);
         }
 
-        order.Total = Money.Create(0m, linesList[0].unitPrice.Currency);
-
-        //TODO: Module 2 Clip 8 — Delete the Money.Create(0m,...) line above; uncomment the computed total below.
-        //order.Total = Money.Create(order.Lines.Sum(l => l.LineTotal.Amount), linesList[0].unitPrice.Currency);
+        order.Total = Money.Create(order.Lines.Sum(l => l.LineTotal.Amount), linesList[0].unitPrice.Currency);
 
         order.RaiseDomainEvent(new OrderPlacedEvent(order.Id, order.PlacedAt));
         return order;
@@ -56,40 +50,35 @@ public class Order : AggregateRoot
 
     public void AddLine(int productId, int quantity, Money unitPrice)
     {
-        //TODO: Module 2 Clip 8 — Add guard clauses (uses _lines, complete Clip 2 first):
-        //if (productId <= 0)
-        //    throw new ArgumentException("A valid product ID is required.", nameof(productId));
-        //if (_lines.Any(l => l.ProductId == productId))
-        //    throw new InvalidOperationException($"Product {productId} is already on this order. Update the existing line's quantity instead.");
+        if (productId <= 0)
+            throw new ArgumentException("A valid product ID is required.", nameof(productId));
+        if (_lines.Any(l => l.ProductId == productId))
+            throw new InvalidOperationException($"Product {productId} is already on this order. Update the existing line's quantity instead.");
 
         _lines.Add(new OrderLine(productId, quantity, unitPrice));
-        //TODO: Module 2 Clip 8 — Keep Total synchronized after AddLine:
-        //Total = Money.Create(Lines.Sum(l => l.LineTotal.Amount), unitPrice.Currency);
+        Total = Money.Create(Lines.Sum(l => l.LineTotal.Amount), unitPrice.Currency);
     }
 
     public void Process()
     {
-        //TODO: Module 2 Clip 8 — Add a state-transition guard:
-        //if (Status != OrderStatus.Placed)
-        //    throw new InvalidOperationException($"Cannot process an order in {Status} state. Only Placed orders can be processed.");
+        if (Status != OrderStatus.Placed)
+            throw new InvalidOperationException($"Cannot process an order in {Status} state. Only Placed orders can be processed.");
 
         Status = OrderStatus.Processing;
     }
 
     public void Confirm()
     {
-        //TODO: Module 2 Clip 8 — Add a state-transition guard:
-        //if (Status != OrderStatus.Processing)
-        //    throw new InvalidOperationException($"Cannot confirm an order in {Status} state. Only Processing orders can be confirmed.");
+        if (Status != OrderStatus.Processing)
+            throw new InvalidOperationException($"Cannot confirm an order in {Status} state. Only Processing orders can be confirmed.");
 
         Status = OrderStatus.Confirmed;
     }
 
     public void Ship()
     {
-        //TODO: Module 2 Clip 8 — Add a state-transition guard:
-        //if (Status != OrderStatus.Confirmed)
-        //    throw new InvalidOperationException($"Cannot ship an order in {Status} state. Only Confirmed orders can be shipped.");
+        if (Status != OrderStatus.Confirmed)
+            throw new InvalidOperationException($"Cannot ship an order in {Status} state. Only Confirmed orders can be shipped.");
 
         Status = OrderStatus.Shipped;
         RaiseDomainEvent(new OrderShippedEvent(Id, DateTime.UtcNow));
@@ -97,11 +86,10 @@ public class Order : AggregateRoot
 
     public void Cancel()
     {
-        //TODO: Module 2 Clip 8 — Add state-transition guards:
-        //if (Status == OrderStatus.Shipped)
-        //    throw new InvalidOperationException("Cannot cancel an order that has already been shipped.");
-        //if (Status == OrderStatus.Cancelled)
-        //    throw new InvalidOperationException("Order is already cancelled.");
+        if (Status == OrderStatus.Shipped)
+            throw new InvalidOperationException("Cannot cancel an order that has already been shipped.");
+        if (Status == OrderStatus.Cancelled)
+            throw new InvalidOperationException("Order is already cancelled.");
 
         Status = OrderStatus.Cancelled;
         RaiseDomainEvent(new OrderCancelledEvent(Id, DateTime.UtcNow));
