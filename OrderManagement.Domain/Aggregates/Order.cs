@@ -6,14 +6,13 @@ namespace OrderManagement.Domain.Aggregates;
 
 public class Order : AggregateRoot
 {
-    //TODO: Module 2 Clip 3 — Change all public setters to private set (Status, PlacedAt, Id, Total, and CustomerId).
     //TODO: Module 2 Clip 4 — Change Total from decimal to Money and map with OwnsOne in OrderConfiguration.
     //TODO: Module 2 Clip 5 — Completely delete the CustomerId property (making it a shadow property). Map the relationship with HasOne in OrderConfiguration instead (see the clip instructions).
-    public int Id { get; set; }
-    public int CustomerId { get; set; }
-    public OrderStatus Status { get; set; }
-    public DateTime PlacedAt { get; set; }
-    public decimal Total { get; set; }
+    public int Id { get; private set; }
+    public int CustomerId { get; private set; }
+    public OrderStatus Status { get; private set; }
+    public DateTime PlacedAt { get; private set; }
+    public decimal Total { get; private set; }
 
     private readonly List<OrderLine> _lines = new();
     public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
