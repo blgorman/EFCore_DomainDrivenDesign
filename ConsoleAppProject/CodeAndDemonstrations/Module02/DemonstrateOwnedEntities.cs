@@ -44,8 +44,7 @@ public static class DemonstrateOwnedEntities
         );
 
         ctx.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctx.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctx.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctx.SaveChangesAsync();
 
         var savedId = order.Id;
