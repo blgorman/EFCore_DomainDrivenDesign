@@ -61,48 +61,39 @@ public static class DemonstrateSpecificationEvaluator
             OutputHelpers.SectionBanner("Step 2 — Four Different Queries Through That Same Method"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 5 — remove this block and uncomment the four-spec block below
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen unlocks in Module 6 Clip 5 — remove this block and uncomment the block below.",
-                "Prerequisite: the Query.Where predicate in OrdersByStatusSpecification."
-            }
-        ));
 
-        //var specs = new (string Name, ISpecification<Order> Spec)[]
-        //{
-        //    ("OrdersByCustomerSpecification(customerId)", new OrdersByCustomerSpecification(SeedDataHelper.CustomerAId)),
-        //    ("OrdersByStatusSpecification(Shipped)",      new OrdersByStatusSpecification(OrderStatus.Shipped)),
-        //    ("MultiLineOrdersSpecification()",            new MultiLineOrdersSpecification()),
-        //    ("LargeOrdersSpecification(100m)",            new LargeOrdersSpecification(100m))
-        //};
-        //
-        //var rows = new List<string>();
-        //
-        //foreach (var (name, spec) in specs)
-        //{
-        //    var results = await repository.ListAsync(spec);
-        //    var ids     = string.Join(", ", results.Select(o => o.Id));
-        //
-        //    rows.Add($"repository.ListAsync(new {name})");
-        //    rows.Add($"    {results.Count} order(s):  {ids}");
-        //    rows.Add("");
-        //}
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Four Specifications, One Repository Method",
-        //    rows
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "Four different queries just ran against the database.",
-        //        "OrderRepository gained no method, and not one line of it changed.",
-        //        "A fifth query is a fifth specification class, still no repository edit."
-        //    })
-        //    .ToArray()
-        //));
+        var specs = new (string Name, ISpecification<Order> Spec)[]
+        {
+            ("OrdersByCustomerSpecification(customerId)", new OrdersByCustomerSpecification(SeedDataHelper.CustomerAId)),
+            ("OrdersByStatusSpecification(Shipped)",      new OrdersByStatusSpecification(OrderStatus.Shipped)),
+            ("MultiLineOrdersSpecification()",            new MultiLineOrdersSpecification()),
+            ("LargeOrdersSpecification(100m)",            new LargeOrdersSpecification(100m))
+        };
+
+        var rows = new List<string>();
+
+        foreach (var (name, spec) in specs)
+        {
+            var results = await repository.ListAsync(spec);
+            var ids     = string.Join(", ", results.Select(o => o.Id));
+
+            rows.Add($"repository.ListAsync(new {name})");
+            rows.Add($"    {results.Count} order(s):  {ids}");
+            rows.Add("");
+        }
+
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "Four Specifications, One Repository Method",
+            rows
+            .Concat(new[]
+            {
+                "---",
+                "Four different queries just ran against the database.",
+                "OrderRepository gained no method, and not one line of it changed.",
+                "A fifth query is a fifth specification class, still no repository edit."
+            })
+            .ToArray()
+        ));
 
         await Task.CompletedTask;
     }
