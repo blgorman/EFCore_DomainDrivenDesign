@@ -6,9 +6,7 @@ namespace OrderManagement.Domain.Aggregates;
 
 public class Order : AggregateRoot
 {
-    //TODO: Module 2 Clip 5 — Completely delete the CustomerId property (making it a shadow property). Map the relationship with HasOne in OrderConfiguration instead (see the clip instructions).
     public int Id { get; private set; }
-    public int CustomerId { get; private set; }
     public OrderStatus Status { get; private set; }
     public DateTime PlacedAt { get; private set; }
     public Money Total { get; private set; }
@@ -35,13 +33,9 @@ public class Order : AggregateRoot
         //if (linesList.Count == 0)
         //    throw new ArgumentException("An order must have at least one line.", nameof(lines));
 
-        //TODO: Module 2 Clip 5 — After removing the CLR CustomerId property, update the object initializer:
-        // Remove: CustomerId = customerId,
-        // Add nothing. The entity does not store CustomerId. EF owns it through shadow state.
         var order = new Order
         {
             Id = 0,
-            CustomerId = customerId,
             Status = OrderStatus.Placed,
             PlacedAt = DateTime.UtcNow
         };

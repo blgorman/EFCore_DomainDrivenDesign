@@ -25,15 +25,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             money.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
         });
 
-        //TODO: Module 2 Clip 5 — After removing the CLR CustomerId property, replace this line
-        builder.Property(o => o.CustomerId)
+        builder.Property<int>("CustomerId");
+        builder.HasOne<Customer>()
+            .WithMany()
+            .HasForeignKey("CustomerId")
             .IsRequired();
-        //  with:
-        //builder.Property<int>("CustomerId");
-        //builder.HasOne<Customer>()
-        //    .WithMany()
-        //    .HasForeignKey("CustomerId")
-        //    .IsRequired();
 
         builder.Navigation(o => o.Lines)
             .HasField("_lines");

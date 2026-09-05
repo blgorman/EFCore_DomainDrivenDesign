@@ -100,35 +100,32 @@ public static class DemonstrateReadOnlyCollections
             }
         ));
 
-        //TODO: Module 2 Clip 5 — After making CustomerId a true shadow property (removing the CLR property
-        // with nothing to replace it, and updating OrderConfiguration), uncomment this block to
-        // demonstrate reading the shadow FK via the EF Entry API — same as OrderLine.OrderId above.
-        ////----------------------------------------------------------------//
-        //Console.WriteLine();
-        //InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
-        //Console.WriteLine();
-        ////----------------------------------------------------------------//
+        //----------------------------------------------------------------//
+        Console.WriteLine();
+        InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
+        Console.WriteLine();
+        //----------------------------------------------------------------//
 
-        //OutputHelpers.WriteColored(
-        //    OutputHelpers.SectionBanner("Part 3 — Reading Order.CustomerId via EF Entry API"),
-        //    ConsoleColor.DarkBlue);
+        OutputHelpers.WriteColored(
+            OutputHelpers.SectionBanner("Part 3 — Reading Order.CustomerId via EF Entry API"),
+            ConsoleColor.DarkBlue);
 
-        //var customerId = ctx.Entry(order).Property<int>("CustomerId").CurrentValue;
+        var customerId = ctx.Entry(order).Property<int>("CustomerId").CurrentValue;
 
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "ctx.Entry(order).Property<int>(\"CustomerId\").CurrentValue",
-        //    new[]
-        //    {
-        //        $"Order Id:    {order.Id}",
-        //        $"CustomerId:  {customerId}   (shadow property — no CLR property on Order)",
-        //        "",
-        //        "Contrast:",
-        //        "  Order.CustomerId   — shadow FK, no CLR property (as of Clip 5)",
-        //        "",
-        //        "Same EF Entry API. Same shadow property pattern. Both hide raw FK integers.",
-        //        "The Customer entity is now usable via a navigation property if needed.",
-        //        "No raw int FK leaks into the public surface of either aggregate entity."
-        //    }
-        //));
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "ctx.Entry(order).Property<int>(\"CustomerId\").CurrentValue",
+            new[]
+            {
+                $"Order Id:    {order.Id}",
+                $"CustomerId:  {customerId}   (shadow property — no CLR property on Order)",
+                "",
+                "Contrast:",
+                "  Order.CustomerId   — shadow FK, no CLR property (as of Clip 5)",
+                "",
+                "Same EF Entry API. Same shadow property pattern. Both hide raw FK integers.",
+                "The Customer entity is now usable via a navigation property if needed.",
+                "No raw int FK leaks into the public surface of either aggregate entity."
+            }
+        ));
     }
 }

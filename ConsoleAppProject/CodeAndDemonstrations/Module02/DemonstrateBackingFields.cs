@@ -96,9 +96,7 @@ public static class DemonstrateBackingFields
             new[]
             {
                 $"Order Id:   {order.Id}",
-                $"CustomerId: {order.CustomerId}",
-                //TODO: Module 2 Clip 5 — Replace the line above with this after making CustomerId a shadow property:
-                // $"CustomerId: {ctx.Entry(order).Property<int>("CustomerId").CurrentValue}",
+                $"CustomerId: {ctx.Entry(order).Property<int>("CustomerId").CurrentValue}",
                 $"Status:     {order.Status}",
                 $"Reloaded order — Lines count from private _lines field: {order.Lines.Count}"
             }
