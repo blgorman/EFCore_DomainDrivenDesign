@@ -6,23 +6,19 @@ namespace OrderManagement.Domain.Aggregates;
 
 public class Order : AggregateRoot
 {
-    //TODO: Module 2 Clip 4 — Change Total from decimal to Money and map with OwnsOne in OrderConfiguration.
     //TODO: Module 2 Clip 5 — Completely delete the CustomerId property (making it a shadow property). Map the relationship with HasOne in OrderConfiguration instead (see the clip instructions).
     public int Id { get; private set; }
     public int CustomerId { get; private set; }
     public OrderStatus Status { get; private set; }
     public DateTime PlacedAt { get; private set; }
-    public decimal Total { get; private set; }
+    public Money Total { get; private set; }
 
     private readonly List<OrderLine> _lines = new();
     public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
 
     //Module 2 Clip 7 — This private constructor exists for EF Core materialization.
     // EF bypasses the factory method and writes directly to backing fields when reloading from the DB.
-    //TODO: Module 2 Clip 4 — After changing Total to Money, replace this line
-    private Order() { }
-    //  with:
-    //private Order() { Total = null!; }
+    private Order() { Total = null!; }
 
     public static Order Place(int customerId, IEnumerable<(int productId, int quantity, Money unitPrice)> lines)
     {
@@ -55,10 +51,7 @@ public class Order : AggregateRoot
             order.AddLine(productId, quantity, unitPrice);
         }
 
-        //TODO: Module 2 Clip 4 — After changing Total to Money, replace this line
-        order.Total = 0.0m;
-        //  with:
-        //order.Total = Money.Create(0m, linesList[0].unitPrice.Currency);
+        order.Total = Money.Create(0m, linesList[0].unitPrice.Currency);
 
         //TODO: Module 2 Clip 8 — Delete the Money.Create(0m,...) line above; uncomment the computed total below.
         //order.Total = Money.Create(order.Lines.Sum(l => l.LineTotal.Amount), linesList[0].unitPrice.Currency);
