@@ -30,34 +30,25 @@ public static class DemonstrateSpecificationBase
             OutputHelpers.SectionBanner("Clip 2 — Create OrdersByCustomerSpecification and Inspect Internals"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 2 — remove this block and uncomment the internals block below
+
+        var whereCount   = spec.WhereExpressions.Count();
+        var includeCount = spec.IncludeExpressions.Count();
+        var orderCount   = spec.OrderExpressions.Count();
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "OrdersByCustomerSpecification — What the Constructor Recorded",
             new[]
             {
-                "This screen unlocks in Module 6 Clip 2 — remove this block and uncomment the block below.",
-                "Prerequisite: the Query.Where predicate in OrdersByCustomerSpecification."
+                $"WhereExpressions count:   {whereCount}",
+                "  Predicate: EF.Property<int>(o, \"CustomerId\") == customerId",
+                "",
+                $"IncludeExpressions count: {includeCount}",
+                $"OrderExpressions count:   {orderCount}",
+                "",
+                "Constructing the specification opened no connection and ran no SQL.",
+                "Query.Where stored the predicate as an expression the object now carries."
             }
         ));
-
-        //var whereCount   = spec.WhereExpressions.Count();
-        //var includeCount = spec.IncludeExpressions.Count();
-        //var orderCount   = spec.OrderExpressions.Count();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "OrdersByCustomerSpecification — What the Constructor Recorded",
-        //    new[]
-        //    {
-        //        $"WhereExpressions count:   {whereCount}",
-        //        "  Predicate: EF.Property<int>(o, \"CustomerId\") == customerId",
-        //        "",
-        //        $"IncludeExpressions count: {includeCount}",
-        //        $"OrderExpressions count:   {orderCount}",
-        //        "",
-        //        "Constructing the specification opened no connection and ran no SQL.",
-        //        "Query.Where stored the predicate as an expression the object now carries."
-        //    }
-        //));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -70,49 +61,40 @@ public static class DemonstrateSpecificationBase
             OutputHelpers.SectionBanner("Step 2 — Run the Specification Through the Repository"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 2 — remove this block and uncomment the execute block below
+
+        var sql = SpecificationEvaluator.Default
+            .GetQuery(context.Orders.AsQueryable(), spec)
+            .ToQueryString();
+
+        var orders = await repository.ListAsync(spec);
+
+        var orderRows = orders
+            .Select(o => $"    Id={o.Id}  Status={o.Status,-10}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
+            .ToArray();
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            $"repository.ListAsync(spec) — {orders.Count} order(s) for Customer {SeedDataHelper.CustomerAId}",
             new[]
             {
-                "This screen unlocks in Module 6 Clip 2 — remove this block and uncomment the block below.",
-                "Prerequisite: the Query.Where predicate in OrdersByCustomerSpecification."
+                "SQL EF Core sent:",
+                "---"
             }
+            .Concat(sql.Split(Environment.NewLine))
+            .Concat(new[]
+            {
+                "---",
+                "Rows returned:",
+                "---"
+            })
+            .Concat(orderRows)
+            .Concat(new[]
+            {
+                "---",
+                "The WHERE clause came from Query.Where inside the specification.",
+                "The calling code passed an object and wrote no LINQ of its own."
+            })
+            .ToArray()
         ));
-
-        //var sql = SpecificationEvaluator.Default
-        //    .GetQuery(context.Orders.AsQueryable(), spec)
-        //    .ToQueryString();
-        //
-        //var orders = await repository.ListAsync(spec);
-        //
-        //var orderRows = orders
-        //    .Select(o => $"    Id={o.Id}  Status={o.Status,-10}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
-        //    .ToArray();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"repository.ListAsync(spec) — {orders.Count} order(s) for Customer {SeedDataHelper.CustomerAId}",
-        //    new[]
-        //    {
-        //        "SQL EF Core sent:",
-        //        "---"
-        //    }
-        //    .Concat(sql.Split(Environment.NewLine))
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "Rows returned:",
-        //        "---"
-        //    })
-        //    .Concat(orderRows)
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "The WHERE clause came from Query.Where inside the specification.",
-        //        "The calling code passed an object and wrote no LINQ of its own."
-        //    })
-        //    .ToArray()
-        //));
 
         await Task.CompletedTask;
     }
