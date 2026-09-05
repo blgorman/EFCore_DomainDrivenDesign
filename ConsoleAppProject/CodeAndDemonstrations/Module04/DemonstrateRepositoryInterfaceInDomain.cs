@@ -100,42 +100,31 @@ public static class DemonstrateRepositoryInterfaceInDomain
         //----------------------------------------------------------------//
 
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 3b: Does Domain Reference EF Core?"), ConsoleColor.DarkBlue);
-        //TODO: Module 4 Clip 3 — Delete the "Not Yet Implemented" box below.
+
+        var domainAssembly = typeof(IOrderRepository).Assembly;
+        var efCoreReference = domainAssembly.GetReferencedAssemblies()
+            .FirstOrDefault(a => a.Name?.Contains("EntityFrameworkCore") == true);
+
+        var methodParamTypes = typeof(IOrderRepository)
+            .GetMethods()
+            .SelectMany(m => m.GetParameters().Select(p => p.ParameterType))
+            .Distinct()
+            .Select(t => $"  {t.Assembly.GetName().Name,-40} {t.Name}")
+            .ToArray();
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            $"Does \"{domainAssemblyName}\" reference EntityFrameworkCore?",
             new[]
             {
-                "This screen will work after completing Module 4 Clip 3.",
-                "Open DemonstrateRepositoryInterfaceInDomain.cs and uncomment the //TODO: Module 4 Clip 3 block.",
-                "Prerequisite: none. IOrderRepository already ships complete."
-            }
+                $"Referenced EF Core assembly found: {(efCoreReference is not null ? efCoreReference.FullName : "none")}",
+                "",
+                efCoreReference is not null
+                    ? "WARNING — Domain has an EF Core reference. This violates the Dependency Rule."
+                    : "Confirmed: Domain has zero EF Core references.",
+                "",
+                "Parameter types used by IOrderRepository methods:",
+            }.Concat(methodParamTypes).ToArray()
         ));
-
-        //TODO: Module 4 Clip 3 — Uncomment the Part 3b block below.
-        //var domainAssembly = typeof(IOrderRepository).Assembly;
-        //var efCoreReference = domainAssembly.GetReferencedAssemblies()
-        //    .FirstOrDefault(a => a.Name?.Contains("EntityFrameworkCore") == true);
-        //
-        //var methodParamTypes = typeof(IOrderRepository)
-        //    .GetMethods()
-        //    .SelectMany(m => m.GetParameters().Select(p => p.ParameterType))
-        //    .Distinct()
-        //    .Select(t => $"  {t.Assembly.GetName().Name,-40} {t.Name}")
-        //    .ToArray();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"Does \"{domainAssemblyName}\" reference EntityFrameworkCore?",
-        //    new[]
-        //    {
-        //        $"Referenced EF Core assembly found: {(efCoreReference is not null ? efCoreReference.FullName : "none")}",
-        //        "",
-        //        efCoreReference is not null
-        //            ? "WARNING — Domain has an EF Core reference. This violates the Dependency Rule."
-        //            : "Confirmed: Domain has zero EF Core references.",
-        //        "",
-        //        "Parameter types used by IOrderRepository methods:",
-        //    }.Concat(methodParamTypes).ToArray()
-        //));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
