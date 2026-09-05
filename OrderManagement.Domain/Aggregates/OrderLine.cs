@@ -17,10 +17,9 @@ public class OrderLine
 
     internal OrderLine(int productId, int quantity, Money unitPrice)
     {
-        //TODO: Module 2 Clip 8 — Add guard clauses:
-        //if (quantity <= 0)
-        //    throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
-        //ArgumentNullException.ThrowIfNull(unitPrice);
+        if (quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+        ArgumentNullException.ThrowIfNull(unitPrice);
 
         Id = 0;
         ProductId = productId;
