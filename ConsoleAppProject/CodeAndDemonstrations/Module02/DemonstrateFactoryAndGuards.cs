@@ -59,24 +59,23 @@ public static class DemonstrateFactoryAndGuards
 
         // Guard 1: negative amount
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 2: Money.Create — Guard 1: Negative Amount Rejected"), ConsoleColor.DarkBlue);
-        //TODO: Module 2 Clip 8 — Uncomment after adding guard clauses to Money.Create.
-        //try
-        //{
-        //    var _ = Money.Create(-5m, "USD");
-        //}
-        //catch (ArgumentException ex)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Money.Create(-5m, \"USD\") — guard fired",
-        //        new[]
-        //        {
-        //            $"Exception:  {ex.GetType().Name}",
-        //            $"Message:    {ex.Message}",
-        //            "",
-        //            "Amount < 0 triggered the guard. No Money was constructed."
-        //        }
-        //    ));
-        //}
+        try
+        {
+            var _ = Money.Create(-5m, "USD");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Money.Create(-5m, \"USD\") — guard fired",
+                new[]
+                {
+                    $"Exception:  {ex.GetType().Name}",
+                    $"Message:    {ex.Message}",
+                    "",
+                    "Amount < 0 triggered the guard. No Money was constructed."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -86,24 +85,23 @@ public static class DemonstrateFactoryAndGuards
 
         // Guard 2: empty currency
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 2: Money.Create — Guard 2: Empty Currency Rejected"), ConsoleColor.DarkBlue);
-        //TODO: Module 2 Clip 8 — Uncomment after adding guard clauses to Money.Create.
-        //try
-        //{
-        //    var _ = Money.Create(10m, "");
-        //}
-        //catch (ArgumentException ex)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Money.Create(10m, \"\") — guard fired",
-        //        new[]
-        //        {
-        //            $"Exception:  {ex.GetType().Name}",
-        //            $"Message:    {ex.Message}",
-        //            "",
-        //            "Empty currency triggered the guard. No Money was constructed."
-        //        }
-        //    ));
-        //}
+        try
+        {
+            var _ = Money.Create(10m, "");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Money.Create(10m, \"\") — guard fired",
+                new[]
+                {
+                    $"Exception:  {ex.GetType().Name}",
+                    $"Message:    {ex.Message}",
+                    "",
+                    "Empty currency triggered the guard. No Money was constructed."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -138,28 +136,27 @@ public static class DemonstrateFactoryAndGuards
 
         // Guard: zero quantity via Order.Place -> AddLine
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 3: OrderLine — Guard: Zero Quantity Rejected"), ConsoleColor.DarkBlue);
-        //TODO: Module 2 Clip 8 — Uncomment after adding guard clauses to OrderLine's constructor.
-        //try
-        //{
-        //    var _ = Order.Place(
-        //        Random.Shared.Next(1, int.MaxValue),
-        //        new[] { (SeedDataHelper.Product1Id, 0, Money.Create(10m, "USD")) }
-        //    );
-        //}
-        //catch (ArgumentException ex)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Order.Place with quantity=0 — OrderLine guard fired",
-        //        new[]
-        //        {
-        //            $"Exception:  {ex.GetType().Name}",
-        //            $"Message:    {ex.Message}",
-        //            "",
-        //            "Quantity <= 0 rejected inside the OrderLine constructor.",
-        //            "The guard fires before the OrderLine is added to the Order."
-        //        }
-        //    ));
-        //}
+        try
+        {
+            var _ = Order.Place(
+                Random.Shared.Next(1, int.MaxValue),
+                new[] { (SeedDataHelper.Product1Id, 0, Money.Create(10m, "USD")) }
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Order.Place with quantity=0 — OrderLine guard fired",
+                new[]
+                {
+                    $"Exception:  {ex.GetType().Name}",
+                    $"Message:    {ex.Message}",
+                    "",
+                    "Quantity <= 0 rejected inside the OrderLine constructor.",
+                    "The guard fires before the OrderLine is added to the Order."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -193,24 +190,23 @@ public static class DemonstrateFactoryAndGuards
 
         // Guard 1: null lines
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 4: Order.Place — Guard 1: Null Lines Rejected"), ConsoleColor.DarkBlue);
-        //TODO: Module 2 Clip 8 — Uncomment after adding guard clauses to Order.Place.
-        //try
-        //{
-        //    var _ = Order.Place(Random.Shared.Next(1, int.MaxValue), null!);
-        //}
-        //catch (ArgumentNullException ex)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Order.Place(customerId, null) — guard fired",
-        //        new[]
-        //        {
-        //            $"Exception:  {ex.GetType().Name}",
-        //            $"Message:    {ex.Message}",
-        //            "",
-        //            "ArgumentNullException.ThrowIfNull(lines) caught the null before any work happened."
-        //        }
-        //    ));
-        //}
+        try
+        {
+            var _ = Order.Place(Random.Shared.Next(1, int.MaxValue), null!);
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Order.Place(customerId, null) — guard fired",
+                new[]
+                {
+                    $"Exception:  {ex.GetType().Name}",
+                    $"Message:    {ex.Message}",
+                    "",
+                    "ArgumentNullException.ThrowIfNull(lines) caught the null before any work happened."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -220,25 +216,24 @@ public static class DemonstrateFactoryAndGuards
 
         // Guard 2: empty lines list
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 4: Order.Place — Guard 2: Empty Lines Rejected"), ConsoleColor.DarkBlue);
-        //TODO: Module 2 Clip 8 — Uncomment after adding guard clauses to Order.Place.
-        //try
-        //{
-        //    var _ = Order.Place(Random.Shared.Next(1, int.MaxValue), Array.Empty<(int, int, Money)>());
-        //}
-        //catch (ArgumentException ex)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Order.Place(customerId, empty list) — guard fired",
-        //        new[]
-        //        {
-        //            $"Exception:  {ex.GetType().Name}",
-        //            $"Message:    {ex.Message}",
-        //            "",
-        //            "An order with zero lines violates the aggregate invariant.",
-        //            "The guard stops construction — a lineless Order can never exist."
-        //        }
-        //    ));
-        //}
+        try
+        {
+            var _ = Order.Place(Random.Shared.Next(1, int.MaxValue), Array.Empty<(int, int, Money)>());
+        }
+        catch (ArgumentException ex)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Order.Place(customerId, empty list) — guard fired",
+                new[]
+                {
+                    $"Exception:  {ex.GetType().Name}",
+                    $"Message:    {ex.Message}",
+                    "",
+                    "An order with zero lines violates the aggregate invariant.",
+                    "The guard stops construction — a lineless Order can never exist."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -270,8 +265,7 @@ public static class DemonstrateFactoryAndGuards
                 $"Line[0] Price:{order.Lines.First().UnitPrice.Amount:C} {order.Lines.First().UnitPrice.Currency}",
                 $"Line[1] Qty:  {order.Lines.Last().Quantity}",
                 $"Line[1] Price:{order.Lines.Last().UnitPrice.Amount:C} {order.Lines.Last().UnitPrice.Currency}",
-                "[TODO Module 2 Clip 8] Add Order Total output after implementing total calculation. Delete this line and uncomment the next",
-                //$"Total:        {order.Total.Amount:C} {order.Total.Currency}",
+                $"Total:        {order.Total.Amount:C} {order.Total.Currency}",
                 "Every object was constructed through its factory.",
                 "Every guard passed. The aggregate is in a guaranteed-valid state."
             }

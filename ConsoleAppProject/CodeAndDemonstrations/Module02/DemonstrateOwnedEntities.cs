@@ -65,8 +65,7 @@ public static class DemonstrateOwnedEntities
                 "",
                 "After updating to Money, both columns are stored in the Orders table — no join, no separate table.",
                 "The 'Total' column holds the amount; 'Currency' holds the currency.",
-                "Only the schema changed, adding one column (Currency). Total column unchanged.",
-                "After Clip 8, total will be calculated from line totals. Until then, it is 0."
+                "Only the schema changed, adding one column (Currency). Total column unchanged."
             }
         ));
 
