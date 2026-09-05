@@ -147,31 +147,20 @@ public static class DemonstrateOrderPlacedEvent
             OutputHelpers.SectionBanner("Stage 4 — Handler Ran: Side Effect Logged"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 5 Clip 6 — Delete this Not Yet Implemented box:
+
+        var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "Stage 4 — Handler Ran Against a Committed Row",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 6.",
-                "Open DemonstrateOrderPlacedEvent.cs and uncomment the Stage 4 block below.",
-                "Prerequisite: requires having completed Module 5 Clip 3 and Clip 4 — interceptor, dispatcher, and handlers."
+                $"Saved row Id:              {savedOrder?.Id}",
+                $"OrderPlacedEvent.OrderId:  {queuedPlacedEvent.OrderId}",
+                "",
+                "Handler output:",
+                $"  {handlerLine}"
             }
         ));
-
-        //TODO: Module 5 Clip 6 — Uncomment the Stage 4 handler box below:
-        //var handlerLine = handlerOutput.Count > 0 ? handlerOutput[^1] : NoHandlerOutput;
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Stage 4 — Handler Ran Against a Committed Row",
-        //    new[]
-        //    {
-        //        $"Saved row Id:              {savedOrder?.Id}",
-        //        $"OrderPlacedEvent.OrderId:  {queuedPlacedEvent.OrderId}",
-        //        "",
-        //        "Handler output:",
-        //        $"  {handlerLine}"
-        //    }
-        //));
 
         Console.WriteLine();
         InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
@@ -182,25 +171,14 @@ public static class DemonstrateOrderPlacedEvent
             OutputHelpers.SectionBanner("Stage 5 — Events Cleared from the Aggregate"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 5 Clip 6 — Delete this Not Yet Implemented box:
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "Stage 5 — Aggregate Is Clean",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 6.",
-                "Open DemonstrateOrderPlacedEvent.cs and uncomment the Stage 5 block below.",
-                "Prerequisite: requires having completed Module 5 Clip 3 — DomainEventDispatchInterceptor.SavedChangesAsync."
+                $"Events remaining on aggregate: {order.DomainEvents.Count}"
             }
         ));
-
-        //TODO: Module 5 Clip 6 — Uncomment the Stage 5 cleared-events box below:
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Stage 5 — Aggregate Is Clean",
-        //    new[]
-        //    {
-        //        $"Events remaining on aggregate: {order.DomainEvents.Count}"
-        //    }
-        //));
 
         // Silent cleanup
         if (savedOrder is not null)
