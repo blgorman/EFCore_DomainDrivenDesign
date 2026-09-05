@@ -159,51 +159,40 @@ public static class DemonstrateOrderRepository
         Console.WriteLine();
 
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Proof 3b — Scoped Isolation: Changes in Scope A Are Invisible to Scope B"), ConsoleColor.DarkBlue);
-        //TODO: Module 4 Clip 4 — Delete the Proof 3b "Not Yet Implemented" box below.
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen will work after completing Module 4 Clip 4.",
-                "Open DemonstrateOrderRepository.cs and uncomment the //TODO: Module 4 Clip 4 block.",
-                "Prerequisite: OrderRepository must already implement Add (Module 4 Clip 4)."
-            }
-        ));
 
-        //TODO: Module 4 Clip 4 — Uncomment after implementing IOrderRepository.Add:
-        //using (var scopeA = serviceProvider.CreateScope())
-        //using (var scopeB = serviceProvider.CreateScope())
-        //{
-        //    var ctxA  = scopeA.ServiceProvider.GetRequiredService<OrderingContext>();
-        //    var repoA = scopeA.ServiceProvider.GetRequiredService<IOrderRepository>();
-        //    var ctxB  = scopeB.ServiceProvider.GetRequiredService<OrderingContext>();
-        //
-        //    var pendingOrder = Order.Place(SeedDataHelper.CustomerAId, new[]
-        //    {
-        //        (SeedDataHelper.Product1Id, 1, Money.Create(9.99m, "USD"))
-        //    });
-        //    repoA.Add(pendingOrder);
-        //
-        //    var scopeAPending = ctxA.ChangeTracker.Entries<Order>().Count();
-        //    var scopeBPending = ctxB.ChangeTracker.Entries<Order>().Count();
-        //
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Proof 3b — ChangeTracker isolation: scope A's unsaved work is invisible to scope B",
-        //        new[]
-        //        {
-        //            "Action: call repoA.Add(newOrder) — no SaveAsync, no INSERT yet.",
-        //            "",
-        //            $"Scope A ChangeTracker.Entries<Order>().Count():  {scopeAPending}",
-        //            $"  => {scopeAPending}: the new Order is staged as EntityState.Added in scope A's DbContext.",
-        //            "",
-        //            $"Scope B ChangeTracker.Entries<Order>().Count():  {scopeBPending}",
-        //            $"  => {scopeBPending}: scope B's DbContext has no knowledge of scope A's pending work.",
-        //            "",
-        //            "Scope B cannot see, undo, or accidentally save what scope A is doing.",
-        //            "This is not a hash comparison — it is a live ChangeTracker state read."
-        //        }
-        //    ));
-        //}
+        using (var scopeA = serviceProvider.CreateScope())
+        using (var scopeB = serviceProvider.CreateScope())
+        {
+            var ctxA  = scopeA.ServiceProvider.GetRequiredService<OrderingContext>();
+            var repoA = scopeA.ServiceProvider.GetRequiredService<IOrderRepository>();
+            var ctxB  = scopeB.ServiceProvider.GetRequiredService<OrderingContext>();
+
+            var pendingOrder = Order.Place(SeedDataHelper.CustomerAId, new[]
+            {
+                (SeedDataHelper.Product1Id, 1, Money.Create(9.99m, "USD"))
+            });
+            repoA.Add(pendingOrder);
+
+            var scopeAPending = ctxA.ChangeTracker.Entries<Order>().Count();
+            var scopeBPending = ctxB.ChangeTracker.Entries<Order>().Count();
+
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Proof 3b — ChangeTracker isolation: scope A's unsaved work is invisible to scope B",
+                new[]
+                {
+                    "Action: call repoA.Add(newOrder) — no SaveAsync, no INSERT yet.",
+                    "",
+                    $"Scope A ChangeTracker.Entries<Order>().Count():  {scopeAPending}",
+                    $"  => {scopeAPending}: the new Order is staged as EntityState.Added in scope A's DbContext.",
+                    "",
+                    $"Scope B ChangeTracker.Entries<Order>().Count():  {scopeBPending}",
+                    $"  => {scopeBPending}: scope B's DbContext has no knowledge of scope A's pending work.",
+                    "",
+                    "Scope B cannot see, undo, or accidentally save what scope A is doing.",
+                    "This is not a hash comparison — it is a live ChangeTracker state read."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -300,39 +289,28 @@ public static class DemonstrateOrderRepository
 
         // --- PART 3: Live call — GetByIdAsync against seeded data ---
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — GetByIdAsync Against Seeded Data"), ConsoleColor.DarkBlue);
-        //TODO: Module 4 Clip 4 — Delete the Live Demo "Not Yet Implemented" box below.
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen will work after completing Module 4 Clip 4.",
-                "Open DemonstrateOrderRepository.cs and uncomment the //TODO: Module 4 Clip 4 block.",
-                "Prerequisite: OrderRepository must already implement GetByIdAsync (Module 4 Clip 4)."
-            }
-        ));
 
-        //TODO: Module 4 Clip 4 — Uncomment after implementing IOrderRepository.GetByIdAsync:
-        //using (var liveScope = serviceProvider.CreateScope())
-        //{
-        //    var ctx  = liveScope.ServiceProvider.GetRequiredService<OrderingContext>();
-        //    var repo = liveScope.ServiceProvider.GetRequiredService<IOrderRepository>();
-        //
-        //    await SeedDataHelper.SeedAsync(ctx);
-        //
-        //    var firstId = await ctx.Orders.AsNoTracking().Select(o => o.Id).FirstAsync();
-        //    var loaded  = await repo.GetByIdAsync(firstId);
-        //
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "GetByIdAsync — real result from the database",
-        //        new[]
-        //        {
-        //            $"Id:         {loaded!.Id}",
-        //            $"CustomerId: {ctx.Entry(loaded).Property<int>("CustomerId").CurrentValue}",
-        //            $"Status:     {loaded.Status}",
-        //            $"PlacedAt:   {loaded.PlacedAt:u}",
-        //            $"Lines:      {loaded.Lines.Count}  (fully loaded — Include is baked in)"
-        //        }
-        //    ));
-        //}
+        using (var liveScope = serviceProvider.CreateScope())
+        {
+            var ctx  = liveScope.ServiceProvider.GetRequiredService<OrderingContext>();
+            var repo = liveScope.ServiceProvider.GetRequiredService<IOrderRepository>();
+
+            await SeedDataHelper.SeedAsync(ctx);
+
+            var firstId = await ctx.Orders.AsNoTracking().Select(o => o.Id).FirstAsync();
+            var loaded  = await repo.GetByIdAsync(firstId);
+
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "GetByIdAsync — real result from the database",
+                new[]
+                {
+                    $"Id:         {loaded!.Id}",
+                    $"CustomerId: {ctx.Entry(loaded).Property<int>("CustomerId").CurrentValue}",
+                    $"Status:     {loaded.Status}",
+                    $"PlacedAt:   {loaded.PlacedAt:u}",
+                    $"Lines:      {loaded.Lines.Count}  (fully loaded — Include is baked in)"
+                }
+            ));
+        }
     }
 }
