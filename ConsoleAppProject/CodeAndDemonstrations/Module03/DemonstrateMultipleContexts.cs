@@ -190,111 +190,87 @@ public static class DemonstrateMultipleContexts
         Console.WriteLine();
         //----------------------------------------------------------------//
 
-        //TODO: Module 3 Clip 7 — Step 1: Delete this entire "Not Yet Implemented" box
-        OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — Reading the Same Row via ShippingContext"), ConsoleColor.DarkBlue);
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen will work after completing Module 3 Clip 7.",
-                "Open DemonstrateMultipleContexts.cs and uncomment the //TODO: Module 3 Clip 7 Screen 5 block.",
-                "Prerequisite: ShippingContext must have DbSet<ShipmentReadModel> and ApplyConfiguration set up (added in Clip 4)."
-            }
-        ));
 
-        //TODO: Module 3 Clip 7 — Step 2: Uncomment this block (requires having previously completed Clip 4).
-        //// --- Screen 5: Read back through ShippingContext ---
-        //var shippingTrackedBefore = shippingCtx.ChangeTracker.Entries().Count();
-        //var shipment = await shippingCtx.Shipments
-        //    .FirstOrDefaultAsync(s => s.Id == newOrder.Id);
-        //var shippingTrackedAfter = shippingCtx.ChangeTracker.Entries().Count();
-        //
-        //OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — Reading the Same Row via ShippingContext"), ConsoleColor.DarkBlue);
-        //
-        //if (shipment is not null)
-        //{
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "shippingCtx.Shipments.FirstOrDefaultAsync(s => s.Id == newOrder.Id)",
-        //        new[]
-        //        {
-        //            $"Shipment Id:   {shipment.Id}",
-        //            $"Status:        {shipment.Status}",
-        //            $"PlacedAt:      {shipment.PlacedAt:u}",
-        //            "",
-        //            "-- Side-by-side comparison --",
-        //            $"  newOrder.Id  == shipment.Id  :  {newOrder.Id == shipment.Id}",
-        //            $"  newOrder.Status.ToString()   :  {newOrder.Status}",
-        //            $"  shipment.Status              :  {shipment.Status}",
-        //            "",
-        //            "ShipmentReadModel has NO Lines property — the column data for OrderLines",
-        //            "exists in the database but ShippingContext never puts it in its model.",
-        //            "",
-        //            $"  ShippingContext tracked entries before query:  {shippingTrackedBefore}",
-        //            $"  ShippingContext tracked entries after query:   {shippingTrackedAfter}",
-        //            "",
-        //            "OrderingContext still tracks the Order from the write above.",
-        //            "ShippingContext tracks only its ShipmentReadModel — completely separate identity maps."
-        //        }
-        //    ));
-        //}
-        //
+        // --- Screen 5: Read back through ShippingContext ---
+        var shippingTrackedBefore = shippingCtx.ChangeTracker.Entries().Count();
+        var shipment = await shippingCtx.Shipments
+            .FirstOrDefaultAsync(s => s.Id == newOrder.Id);
+        var shippingTrackedAfter = shippingCtx.ChangeTracker.Entries().Count();
+
+        OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — Reading the Same Row via ShippingContext"), ConsoleColor.DarkBlue);
+
+        if (shipment is not null)
+        {
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "shippingCtx.Shipments.FirstOrDefaultAsync(s => s.Id == newOrder.Id)",
+                new[]
+                {
+                    $"Shipment Id:   {shipment.Id}",
+                    $"Status:        {shipment.Status}",
+                    $"PlacedAt:      {shipment.PlacedAt:u}",
+                    "",
+                    "-- Side-by-side comparison --",
+                    $"  newOrder.Id  == shipment.Id  :  {newOrder.Id == shipment.Id}",
+                    $"  newOrder.Status.ToString()   :  {newOrder.Status}",
+                    $"  shipment.Status              :  {shipment.Status}",
+                    "",
+                    "ShipmentReadModel has NO Lines property — the column data for OrderLines",
+                    "exists in the database but ShippingContext never puts it in its model.",
+                    "",
+                    $"  ShippingContext tracked entries before query:  {shippingTrackedBefore}",
+                    $"  ShippingContext tracked entries after query:   {shippingTrackedAfter}",
+                    "",
+                    "OrderingContext still tracks the Order from the write above.",
+                    "ShippingContext tracks only its ShipmentReadModel — completely separate identity maps."
+                }
+            ));
+        }
+
         //----------------------------------------------------------------//
         Console.WriteLine();
         InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
         Console.WriteLine();
         //----------------------------------------------------------------//
 
-        //TODO: Module 3 Clip 7 — Step 3: Delete this entire "Not Yet Implemented" box
+
+        // --- Screen 6: Ship the order via OrderingContext, verify Shipping sees new status ---
+        var reloadedOrder = await orderingCtx.Orders
+            .Include(o => o.Lines)
+            .FirstAsync(o => o.Id == newOrder.Id);
+
+        reloadedOrder.Process();
+        reloadedOrder.Confirm();
+        reloadedOrder.Ship();
+        await orderingCtx.SaveChangesAsync();
+
+        // ShippingContext must re-query — its identity map has the old stale entry
+        shippingCtx.ChangeTracker.Clear();
+        var shippedShipment = await shippingCtx.Shipments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == newOrder.Id);
+
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Status Change Propagates Between Contexts via the Database"), ConsoleColor.DarkBlue);
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "OrderingContext ships the order; ShippingContext re-queries to see the new status",
             new[]
             {
-                "This screen will work after completing Module 3 Clip 7.",
-                "Open DemonstrateMultipleContexts.cs and uncomment the //TODO: Module 3 Clip 7 Screen 6 block.",
-                "Prerequisite: ShippingContext must have DbSet<ShipmentReadModel> and ApplyConfiguration set up (added in Clip 4)."
+                "-- OrderingContext --",
+                $"  Reloaded order and called order.Ship()",
+                $"  Status after Ship():   {reloadedOrder.Status}",
+                $"  Saved via orderingCtx.SaveChangesAsync()",
+                "",
+                "-- ShippingContext re-query (AsNoTracking, ChangeTracker.Clear) --",
+                $"  {(shippedShipment is null ? "Not found" : $"Shipment Status: {shippedShipment.Status}")}",
+                "",
+                "There is no in-process notification from one context to the other.",
+                "ShippingContext sees the change because both read from the same database.",
+                "The domain boundary is enforced in code, not in the storage layer.",
+                "",
+                "This is intentional: contexts communicate through the database,",
+                "not through shared in-memory references."
             }
         ));
 
-        //TODO: Module 3 Clip 7 — Step 4: Uncomment this block (requires having previously completed Clip 4).
-        //// --- Screen 6: Ship the order via OrderingContext, verify Shipping sees new status ---
-        //var reloadedOrder = await orderingCtx.Orders
-        //    .Include(o => o.Lines)
-        //    .FirstAsync(o => o.Id == newOrder.Id);
-        //
-        //reloadedOrder.Process();
-        //reloadedOrder.Confirm();
-        //reloadedOrder.Ship();
-        //await orderingCtx.SaveChangesAsync();
-        //
-        //// ShippingContext must re-query — its identity map has the old stale entry
-        //shippingCtx.ChangeTracker.Clear();
-        //var shippedShipment = await shippingCtx.Shipments
-        //    .AsNoTracking()
-        //    .FirstOrDefaultAsync(s => s.Id == newOrder.Id);
-        //
-        //OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Status Change Propagates Between Contexts via the Database"), ConsoleColor.DarkBlue);
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "OrderingContext ships the order; ShippingContext re-queries to see the new status",
-        //    new[]
-        //    {
-        //        "-- OrderingContext --",
-        //        $"  Reloaded order and called order.Ship()",
-        //        $"  Status after Ship():   {reloadedOrder.Status}",
-        //        $"  Saved via orderingCtx.SaveChangesAsync()",
-        //        "",
-        //        "-- ShippingContext re-query (AsNoTracking, ChangeTracker.Clear) --",
-        //        $"  {(shippedShipment is null ? "Not found" : $"Shipment Status: {shippedShipment.Status}")}",
-        //        "",
-        //        "There is no in-process notification from one context to the other.",
-        //        "ShippingContext sees the change because both read from the same database.",
-        //        "The domain boundary is enforced in code, not in the storage layer.",
-        //        "",
-        //        "This is intentional: contexts communicate through the database,",
-        //        "not through shared in-memory references."
-        //    }
-        //));
-        //
         
         //----------------------------------------------------------------//
         Console.WriteLine();
