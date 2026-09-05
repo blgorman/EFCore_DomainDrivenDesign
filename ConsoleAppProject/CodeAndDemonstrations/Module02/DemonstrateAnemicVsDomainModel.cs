@@ -48,9 +48,6 @@ public static class DemonstrateAnemicVsDomainModel
             new[]
             {
                 $"Id:         {validOrder.Id}",
-                //TODO: Module 2 Clip 5 — Remove this line after making CustomerId a shadow property on Order.
-                // After Clip 5, order.CustomerId no longer exists as a CLR property — this will not compile.
-                $"CustomerId: {validOrder.CustomerId}",
                 $"Status:     {validOrder.Status}",
                 $"PlacedAt:   {validOrder.PlacedAt:u}",
                 $"Lines:      {validOrder.Lines.Count}",

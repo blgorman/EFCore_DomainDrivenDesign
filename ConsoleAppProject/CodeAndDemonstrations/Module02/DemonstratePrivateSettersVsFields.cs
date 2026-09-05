@@ -66,8 +66,7 @@ public static class DemonstratePrivateSettersVsFields
 
         //add (persist) the order.
         ctxA.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctxA.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctxA.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctxA.SaveChangesAsync();
 
         //get the id of the saved order to demonstrate that EF persisted and reloaded the Status value correctly, even though it has a private setter.
@@ -144,8 +143,7 @@ public static class DemonstratePrivateSettersVsFields
         //-----------------------------------------------------------------
 
         ctxB.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctxB.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctxB.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctxB.SaveChangesAsync();
 
         var savedId = order.Id;

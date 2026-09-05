@@ -67,8 +67,7 @@ public static class SeedDataHelper
             (Product2Id, 1, Money.Create(49.99m, "USD"))
         });
         context.Orders.Add(order1);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order1).Property<int>("CustomerId").CurrentValue = CustomerAId;
+        context.Entry(order1).Property<int>("CustomerId").CurrentValue = CustomerAId;
 
         // Order 2: Placed, Customer A, 1 line
         var order2 = Order.Place(CustomerAId, new[]
@@ -76,8 +75,7 @@ public static class SeedDataHelper
             (Product3Id, 3, Money.Create(9.99m, "USD"))
         });
         context.Orders.Add(order2);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order2).Property<int>("CustomerId").CurrentValue = CustomerAId;
+        context.Entry(order2).Property<int>("CustomerId").CurrentValue = CustomerAId;
 
         //Order 3: Shipped, Customer B, 3 lines (ship after save below)
         var order3 = Order.Place(CustomerBId, new[]
@@ -87,8 +85,7 @@ public static class SeedDataHelper
             (Product3Id, 4, Money.Create(9.99m, "USD"))
         });
         context.Orders.Add(order3);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order3).Property<int>("CustomerId").CurrentValue = CustomerBId;
+        context.Entry(order3).Property<int>("CustomerId").CurrentValue = CustomerBId;
 
         //Order 4: Cancelled, Customer B, 2 lines (cancel after save below)
         var order4 = Order.Place(CustomerBId, new[]
@@ -97,8 +94,7 @@ public static class SeedDataHelper
             (Product3Id, 2, Money.Create(9.99m, "USD"))
         });
         context.Orders.Add(order4);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order4).Property<int>("CustomerId").CurrentValue = CustomerBId;
+        context.Entry(order4).Property<int>("CustomerId").CurrentValue = CustomerBId;
 
         // Orders 5–8: varied for Module 6 search demo
         var order5 = Order.Place(CustomerAId, new[]
@@ -106,24 +102,21 @@ public static class SeedDataHelper
             (Product1Id, 5, Money.Create(29.99m, "USD"))
         });
         context.Orders.Add(order5);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order5).Property<int>("CustomerId").CurrentValue = CustomerAId;
+        context.Entry(order5).Property<int>("CustomerId").CurrentValue = CustomerAId;
 
         var order6 = Order.Place(CustomerBId, new[]
         {
             (Product2Id, 3, Money.Create(49.99m, "USD"))
         });
         context.Orders.Add(order6);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order6).Property<int>("CustomerId").CurrentValue = CustomerBId;
+        context.Entry(order6).Property<int>("CustomerId").CurrentValue = CustomerBId;
 
         var order7 = Order.Place(CustomerAId, new[]
         {
             (Product3Id, 10, Money.Create(9.99m, "USD"))
         });
         context.Orders.Add(order7);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order7).Property<int>("CustomerId").CurrentValue = CustomerAId;
+        context.Entry(order7).Property<int>("CustomerId").CurrentValue = CustomerAId;
 
         var order8 = Order.Place(CustomerBId, new[]
         {
@@ -131,8 +124,7 @@ public static class SeedDataHelper
             (Product3Id, 3, Money.Create(9.99m, "USD"))
         });
         context.Orders.Add(order8);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //context.Entry(order8).Property<int>("CustomerId").CurrentValue = CustomerBId;
+        context.Entry(order8).Property<int>("CustomerId").CurrentValue = CustomerBId;
 
         // Save all as Placed first — the interceptor fires and dispatches OrderPlacedEvent to registered handlers
         await context.SaveChangesAsync();
@@ -162,8 +154,7 @@ public static class SeedDataHelper
             new[] { (Product1Id, 1, Money.Create(29.99m, "USD")) });
 
         ctx.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctx.Entry(order).Property<int>("CustomerId").CurrentValue = CustomerAId;
+        ctx.Entry(order).Property<int>("CustomerId").CurrentValue = CustomerAId;
         await ctx.SaveChangesAsync();
 
         return order;
