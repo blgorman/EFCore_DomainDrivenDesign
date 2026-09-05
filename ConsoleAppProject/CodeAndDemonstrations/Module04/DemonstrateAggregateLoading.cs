@@ -187,39 +187,28 @@ public static class DemonstrateAggregateLoading
             OutputHelpers.SectionBanner("Generated SQL — What EF Core Actually Sent"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 4 Clip 5 — Delete the "Not Yet Implemented" box below.
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen prints generated SQL after completing Module 4 Clip 5.",
-                "Open DemonstrateAggregateLoading.cs and delete the box at the first",
-                "//TODO: Module 4 Clip 5 marker, then uncomment the block at the second.",
-                "Prerequisite: none. This screen queries OrderingContext directly."
-            }));
 
-        //TODO: Module 4 Clip 5 — Uncomment this block to print the generated SQL.
-        //await using (var loggingContext = CreateLoggingContext(contextD))
-        //{
-        //    OutputHelpers.WriteColored("  Load 1: .Include(o => o.Lines)", ConsoleColor.DarkGreen);
-        //    Console.WriteLine();
-        //    await loggingContext.Orders
-        //        .Include(o => o.Lines)
-        //        .AsNoTracking()
-        //        .FirstOrDefaultAsync(o => o.Id == firstOrderId);
-        //
-        //    Console.WriteLine();
-        //    InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
-        //    Console.WriteLine();
-        //
-        //    OutputHelpers.WriteColored("  Load 2: .Include(o => o.Lines).AsSplitQuery()", ConsoleColor.DarkGreen);
-        //    Console.WriteLine();
-        //    await loggingContext.Orders
-        //        .Include(o => o.Lines)
-        //        .AsSplitQuery()
-        //        .AsNoTracking()
-        //        .FirstOrDefaultAsync(o => o.Id == firstOrderId);
-        //}
+        await using (var loggingContext = CreateLoggingContext(contextD))
+        {
+            OutputHelpers.WriteColored("  Load 1: .Include(o => o.Lines)", ConsoleColor.DarkGreen);
+            Console.WriteLine();
+            await loggingContext.Orders
+                .Include(o => o.Lines)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Id == firstOrderId);
+
+            Console.WriteLine();
+            InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
+            Console.WriteLine();
+
+            OutputHelpers.WriteColored("  Load 2: .Include(o => o.Lines).AsSplitQuery()", ConsoleColor.DarkGreen);
+            Console.WriteLine();
+            await loggingContext.Orders
+                .Include(o => o.Lines)
+                .AsSplitQuery()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Id == firstOrderId);
+        }
 
         Console.WriteLine();
     }
