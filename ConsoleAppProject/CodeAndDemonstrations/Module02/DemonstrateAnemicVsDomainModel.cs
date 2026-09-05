@@ -54,10 +54,7 @@ public static class DemonstrateAnemicVsDomainModel
                 $"Status:     {validOrder.Status}",
                 $"PlacedAt:   {validOrder.PlacedAt:u}",
                 $"Lines:      {validOrder.Lines.Count}",
-                //TODO: Module 2 Clip 4 — After changing Total to Money, this becomes a compile error:
-                $"Total:      {validOrder.Total:C}  <-- always 0 until Clip 8 adds the calculation"
-                // Change to:
-                //$"Total:      {validOrder.Total.Amount:C}  <-- always 0 until Clip 8 adds the calculation"
+                $"Total:      {validOrder.Total.Amount:C}  <-- always 0 until Clip 8 adds the calculation"
             }
         ));
 

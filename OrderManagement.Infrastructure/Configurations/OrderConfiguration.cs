@@ -19,15 +19,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.PlacedAt)
             .IsRequired();
 
-        //TODO: Module 2 Clip 4 — After changing Order.Total from decimal to Money, replace this line
-        builder.Property(o => o.Total)
-            .IsRequired();
-        //  with:
-        //builder.OwnsOne(o => o.Total, money =>
-        //{
-        //    money.Property(m => m.Amount).HasColumnName("Total").IsRequired();
-        //    money.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
-        //});
+        builder.OwnsOne(o => o.Total, money =>
+        {
+            money.Property(m => m.Amount).HasColumnName("Total").IsRequired();
+            money.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
+        });
 
         //TODO: Module 2 Clip 5 — After removing the CLR CustomerId property, replace this line
         builder.Property(o => o.CustomerId)
