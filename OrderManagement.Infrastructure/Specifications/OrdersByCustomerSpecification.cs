@@ -10,7 +10,6 @@ public class OrdersByCustomerSpecification : Specification<Order>
     {
         Query.Where(o => EF.Property<int>(o, "CustomerId") == customerId);
 
-        //TODO: Module 6 Clip 4 — Uncomment Include and OrderBy below:
-        //Query.Include(o => o.Lines).OrderByDescending(o => o.PlacedAt);
+        Query.Include(o => o.Lines).OrderByDescending(o => o.PlacedAt);
     }
 }
