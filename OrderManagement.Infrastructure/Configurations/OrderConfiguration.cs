@@ -39,11 +39,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         //    .HasForeignKey("CustomerId")
         //    .IsRequired();
 
-        //TODO: Module 2 Clip 2 — Explicitly tell EF to use the private backing field
-        // '_lines' for the Lines navigation, rather than relying on convention, which
-        // would have materialized this for us, even without this code.
-        //builder.Navigation(o => o.Lines)
-        //    .HasField("_lines");
+        builder.Navigation(o => o.Lines)
+            .HasField("_lines");
 
         // OrderId is a shadow FK from day one — OrderLine has no CLR OrderId property.
         // This is the reference example for Clip 5: the same pattern applied to Order.CustomerId.
