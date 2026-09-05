@@ -14,15 +14,12 @@ public class DomainEventDispatcher
 
     public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken ct = default)
     {
-        //TODO: Module 5 Clip 4 — Uncomment the implementation below:
-        //var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
-        //var handlers = _serviceProvider.GetServices(handlerType);
-        //foreach (var handler in handlers)
-        //{
-        //    if (handler is IDomainEventHandler h)
-        //        await h.HandleAsync(domainEvent, ct);
-        //}
-
-        await Task.CompletedTask;
+        var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+        var handlers = _serviceProvider.GetServices(handlerType);
+        foreach (var handler in handlers)
+        {
+            if (handler is IDomainEventHandler h)
+                await h.HandleAsync(domainEvent, ct);
+        }
     }
 }
