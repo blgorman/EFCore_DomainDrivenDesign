@@ -143,78 +143,66 @@ public static class DemonstrateOneTableTwoModels
         Console.WriteLine();
         //----------------------------------------------------------------//
 
-        //TODO: Module 3 Clip 5 — Step 1: Delete this entire "Not Yet Implemented" box
+
+        // --- Screen 5: Live demo — same row, two different hydrated objects ---
+        using var orderingScope = serviceProvider.CreateScope();
+        var orderingCtx = orderingScope.ServiceProvider.GetRequiredService<OrderingContext>();
+
+        using var shippingScope = serviceProvider.CreateScope();
+        var shippingCtx = shippingScope.ServiceProvider.GetRequiredService<ShippingContext>();
+
+        var order = await SeedDataHelper.EnsureOrderWithLinesAsync(orderingCtx);
+
+        var shipment = await shippingCtx.Shipments
+            .OrderBy(s => s.PlacedAt)
+            .FirstAsync();
+
+        var firstLine = order.Lines.First();
+
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — Same Row Queried From Both Contexts"), ConsoleColor.DarkBlue);
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "orderingCtx.Orders.Include(o => o.Lines).FirstAsync()",
             new[]
             {
-                "This screen will work after completing Module 3 Clip 5.",
-                "Open DemonstrateOneTableTwoModels.cs and uncomment the //TODO: Module 3 Clip 5 block.",
-                "Prerequisite: ShipmentReadModelConfiguration must call ExcludeFromMigrations() and match the Status column conversion."
+                $"Id:          {order.Id}",
+                $"CustomerId:  {orderingCtx.Entry(order).Property<int>("CustomerId").CurrentValue}",
+                $"Status:      {order.Status}",
+                $"PlacedAt:    {order.PlacedAt:u}",
+                $"Lines:       {order.Lines.Count} line(s)",
+                $"  Line 1:    Qty {firstLine.Quantity} x " +
+                    $"{firstLine.UnitPrice.Amount:F2} {firstLine.UnitPrice.Currency}",
+                $"Total:       {order.Total.Amount:F2} {order.Total.Currency}",
+                "",
+                "CustomerId, Lines collection, and Money are fully hydrated.",
+                "The rich aggregate is ready for domain operations."
             }
         ));
 
-        //TODO: Module 3 Clip 5 — Step 2: Uncomment this block after ShipmentReadModelConfiguration calls ExcludeFromMigrations() and matches the Status column conversion.
-        //// --- Screen 5: Live demo — same row, two different hydrated objects ---
-        //using var orderingScope = serviceProvider.CreateScope();
-        //var orderingCtx = orderingScope.ServiceProvider.GetRequiredService<OrderingContext>();
-        //
-        //using var shippingScope = serviceProvider.CreateScope();
-        //var shippingCtx = shippingScope.ServiceProvider.GetRequiredService<ShippingContext>();
-        //
-        //var order = await SeedDataHelper.EnsureOrderWithLinesAsync(orderingCtx);
-        //
-        //var shipment = await shippingCtx.Shipments
-        //    .OrderBy(s => s.PlacedAt)
-        //    .FirstAsync();
-        //
-        //var firstLine = order.Lines.First();
-        //
-        //OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Live Demo — Same Row Queried From Both Contexts"), ConsoleColor.DarkBlue);
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "orderingCtx.Orders.Include(o => o.Lines).FirstAsync()",
-        //    new[]
-        //    {
-        //        $"Id:          {order.Id}",
-        //        $"CustomerId:  {orderingCtx.Entry(order).Property<int>("CustomerId").CurrentValue}",
-        //        $"Status:      {order.Status}",
-        //        $"PlacedAt:    {order.PlacedAt:u}",
-        //        $"Lines:       {order.Lines.Count} line(s)",
-        //        $"  Line 1:    Qty {firstLine.Quantity} x " +
-        //            $"{firstLine.UnitPrice.Amount:F2} {firstLine.UnitPrice.Currency}",
-        //        $"Total:       {order.Total.Amount:F2} {order.Total.Currency}",
-        //        "",
-        //        "CustomerId, Lines collection, and Money are fully hydrated.",
-        //        "The rich aggregate is ready for domain operations."
-        //    }
-        //));
-        //
-        ////----------------------------------------------------------------//
-        //Console.WriteLine();
-        //InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
-        //Console.WriteLine();
-        ////----------------------------------------------------------------//
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "shippingCtx.Shipments.FirstAsync()  — same primary key, same row",
-        //    new[]
-        //    {
-        //        $"Id:       {shipment.Id}",
-        //        $"Status:   {shipment.Status}",
-        //        $"PlacedAt: {shipment.PlacedAt:u}",
-        //        "",
-        //        $"Ids match: {order.Id == shipment.Id}   <-- same database row",
-        //        "",
-        //        "CustomerId:  not mapped — not loaded — not visible here",
-        //        "Lines:       not mapped — no navigation property on this type",
-        //        "Money:       not mapped — no value object on ShipmentReadModel",
-        //        "",
-        //        "Same row. Completely different CLR objects.",
-        //        "EF projected only what ShippingContext declared in its model."
-        //    }
-        //));
-        //  
+        //----------------------------------------------------------------//
+        Console.WriteLine();
+        InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
+        Console.WriteLine();
+        //----------------------------------------------------------------//
+
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "shippingCtx.Shipments.FirstAsync()  — same primary key, same row",
+            new[]
+            {
+                $"Id:       {shipment.Id}",
+                $"Status:   {shipment.Status}",
+                $"PlacedAt: {shipment.PlacedAt:u}",
+                "",
+                $"Ids match: {order.Id == shipment.Id}   <-- same database row",
+                "",
+                "CustomerId:  not mapped — not loaded — not visible here",
+                "Lines:       not mapped — no navigation property on this type",
+                "Money:       not mapped — no value object on ShipmentReadModel",
+                "",
+                "Same row. Completely different CLR objects.",
+                "EF projected only what ShippingContext declared in its model."
+            }
+        ));
+
         
         //----------------------------------------------------------------//
         Console.WriteLine();

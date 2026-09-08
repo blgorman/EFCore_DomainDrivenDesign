@@ -30,39 +30,30 @@ public static class DemonstrateSpecificationWithIncludes
             OutputHelpers.SectionBanner("Clip 4 — Inspect OrdersByCustomerSpecification Includes and Order"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 4 — remove this block and uncomment the internals block below
+
+        var includeCount = spec.IncludeExpressions.Count();
+        var orderCount   = spec.OrderExpressions.Count();
+
+        var firstInclude  = spec.IncludeExpressions.FirstOrDefault();
+        var includeDesc   = firstInclude?.LambdaExpression?.ToString() ?? "(none)";
+
+        var firstOrder    = spec.OrderExpressions.FirstOrDefault();
+        var orderTypeDesc = firstOrder?.OrderType.ToString() ?? "(none)";
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "OrdersByCustomerSpecification — Include and Order Now Recorded",
             new[]
             {
-                "This screen unlocks in Module 6 Clip 4 — remove this block and uncomment the block below.",
-                "Prerequisite: the Query.Include and OrderByDescending calls in OrdersByCustomerSpecification."
+                $"IncludeExpressions declared: {includeCount}",
+                $"  Expression: {includeDesc}",
+                "",
+                $"OrderExpressions declared:   {orderCount}",
+                $"  Order type: {orderTypeDesc}  (by PlacedAt)",
+                "",
+                "The same object already carried the Where predicate.",
+                "Loading and ordering are now declared beside it, in one constructor."
             }
         ));
-
-        //var includeCount = spec.IncludeExpressions.Count();
-        //var orderCount   = spec.OrderExpressions.Count();
-        //
-        //var firstInclude  = spec.IncludeExpressions.FirstOrDefault();
-        //var includeDesc   = firstInclude?.LambdaExpression?.ToString() ?? "(none)";
-        //
-        //var firstOrder    = spec.OrderExpressions.FirstOrDefault();
-        //var orderTypeDesc = firstOrder?.OrderType.ToString() ?? "(none)";
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "OrdersByCustomerSpecification — Include and Order Now Recorded",
-        //    new[]
-        //    {
-        //        $"IncludeExpressions declared: {includeCount}",
-        //        $"  Expression: {includeDesc}",
-        //        "",
-        //        $"OrderExpressions declared:   {orderCount}",
-        //        $"  Order type: {orderTypeDesc}  (by PlacedAt)",
-        //        "",
-        //        "The same object already carried the Where predicate.",
-        //        "Loading and ordering are now declared beside it, in one constructor."
-        //    }
-        //));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -75,57 +66,48 @@ public static class DemonstrateSpecificationWithIncludes
             OutputHelpers.SectionBanner("Step 2 — Execute: Lines Loaded and Rows Ordered by the Specification"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 4 — remove this block and uncomment the execute block below
+
+        var sql = SpecificationEvaluator.Default
+            .GetQuery(context.Orders.AsQueryable(), spec)
+            .ToQueryString();
+
+        var orders = await repository.ListAsync(spec);
+
+        var resultLines = orders
+            .SelectMany(o => new[]
+                {
+                    $"    Order {o.Id}   PlacedAt={o.PlacedAt:yyyy-MM-dd HH:mm}   Lines={o.Lines.Count}"
+                }
+                .Concat(o.Lines.Select(l =>
+                    $"        Product {l.ProductId}   Qty {l.Quantity}" +
+                    $"   @ {l.UnitPrice.Amount:0.00} {l.UnitPrice.Currency}" +
+                    $"   = {l.LineTotal.Amount:0.00} {l.LineTotal.Currency}")))
+            .ToArray();
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            $"repository.ListAsync(spec) — {orders.Count} order(s), newest first",
             new[]
             {
-                "This screen unlocks in Module 6 Clip 4 — remove this block and uncomment the block below.",
-                "Prerequisite: the Query.Include and OrderByDescending calls in OrdersByCustomerSpecification."
+                "SQL EF Core sent — note the JOIN and the ORDER BY:",
+                "---"
             }
+            .Concat(sql.Split(Environment.NewLine))
+            .Concat(new[]
+            {
+                "---",
+                "Rows returned:",
+                "---"
+            })
+            .Concat(resultLines)
+            .Concat(new[]
+            {
+                "---",
+                $"Lines.Count > 0 on every order: {orders.All(o => o.Lines.Count > 0)}",
+                "No demo code called LoadAsync. Query.Include did the loading.",
+                "No demo code called OrderByDescending. The specification carried the order."
+            })
+            .ToArray()
         ));
-
-        //var sql = SpecificationEvaluator.Default
-        //    .GetQuery(context.Orders.AsQueryable(), spec)
-        //    .ToQueryString();
-        //
-        //var orders = await repository.ListAsync(spec);
-        //
-        //var resultLines = orders
-        //    .SelectMany(o => new[]
-        //        {
-        //            $"    Order {o.Id}   PlacedAt={o.PlacedAt:yyyy-MM-dd HH:mm}   Lines={o.Lines.Count}"
-        //        }
-        //        .Concat(o.Lines.Select(l =>
-        //            $"        Product {l.ProductId}   Qty {l.Quantity}" +
-        //            $"   @ {l.UnitPrice.Amount:0.00} {l.UnitPrice.Currency}" +
-        //            $"   = {l.LineTotal.Amount:0.00} {l.LineTotal.Currency}")))
-        //    .ToArray();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"repository.ListAsync(spec) — {orders.Count} order(s), newest first",
-        //    new[]
-        //    {
-        //        "SQL EF Core sent — note the JOIN and the ORDER BY:",
-        //        "---"
-        //    }
-        //    .Concat(sql.Split(Environment.NewLine))
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "Rows returned:",
-        //        "---"
-        //    })
-        //    .Concat(resultLines)
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        $"Lines.Count > 0 on every order: {orders.All(o => o.Lines.Count > 0)}",
-        //        "No demo code called LoadAsync. Query.Include did the loading.",
-        //        "No demo code called OrderByDescending. The specification carried the order."
-        //    })
-        //    .ToArray()
-        //));
 
         await Task.CompletedTask;
     }

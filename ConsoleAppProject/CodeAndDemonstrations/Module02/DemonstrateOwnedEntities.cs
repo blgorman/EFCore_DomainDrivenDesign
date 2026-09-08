@@ -44,8 +44,7 @@ public static class DemonstrateOwnedEntities
         );
 
         ctx.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctx.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctx.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctx.SaveChangesAsync();
 
         var savedId = order.Id;
@@ -54,30 +53,19 @@ public static class DemonstrateOwnedEntities
         var ctx2 = scope2.ServiceProvider.GetRequiredService<OrderingContext>();
         var reloaded = await ctx2.Orders.FirstOrDefaultAsync(o => o.Id == savedId);
 
-        //TODO: Module 2 Clip 4 - Replace this line:
-        OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Order.Total — Starter (decimal)"), ConsoleColor.DarkBlue);
-        //WITH:
-        //OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Order.Total — After Clip 4 (Money with OwnsOne)"), ConsoleColor.DarkBlue);
+        OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Order.Total — After Clip 4 (Money with OwnsOne)"), ConsoleColor.DarkBlue);
         
-        //TODO: Module 2 Clip 4 - Replace this line:
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Order saved and reloaded — Total as plain decimal",
-        //WITH:
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            //"Order saved and reloaded — Total as Money (OwnsOne)",
+            "Order saved and reloaded — Total as Money (OwnsOne)",
             new[]
             {
                 $"Order Id:    {reloaded!.Id}",
-                //TODO: Module 2 Clip 4 — After changing Total to Money, change this line
-                $"Total:       {reloaded.Total:F2}  <-- decimal only, no currency attached",
-                //to:
-                //$"Total.Amount:    {reloaded.Total.Amount:F2}",
-                //$"Total.Currency:  {reloaded.Total.Currency}",
+                $"Total.Amount:    {reloaded.Total.Amount:F2}",
+                $"Total.Currency:  {reloaded.Total.Currency}",
                 "",
                 "After updating to Money, both columns are stored in the Orders table — no join, no separate table.",
                 "The 'Total' column holds the amount; 'Currency' holds the currency.",
-                "Only the schema changed, adding one column (Currency). Total column unchanged.",
-                "After Clip 8, total will be calculated from line totals. Until then, it is 0."
+                "Only the schema changed, adding one column (Currency). Total column unchanged."
             }
         ));
 

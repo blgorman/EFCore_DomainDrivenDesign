@@ -19,29 +19,20 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.PlacedAt)
             .IsRequired();
 
-        //TODO: Module 2 Clip 4 — After changing Order.Total from decimal to Money, replace this line
-        builder.Property(o => o.Total)
-            .IsRequired();
-        //  with:
-        //builder.OwnsOne(o => o.Total, money =>
-        //{
-        //    money.Property(m => m.Amount).HasColumnName("Total").IsRequired();
-        //    money.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
-        //});
+        builder.OwnsOne(o => o.Total, money =>
+        {
+            money.Property(m => m.Amount).HasColumnName("Total").IsRequired();
+            money.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
+        });
 
-        //TODO: Module 2 Clip 5 — After removing the CLR CustomerId property, replace this line
-        builder.Property(o => o.CustomerId)
+        builder.Property<int>("CustomerId");
+        builder.HasOne<Customer>()
+            .WithMany()
+            .HasForeignKey("CustomerId")
             .IsRequired();
-        //  with:
-        //builder.Property<int>("CustomerId");
-        //builder.HasOne<Customer>()
-        //    .WithMany()
-        //    .HasForeignKey("CustomerId")
-        //    .IsRequired();
 
-        //TODO: Module 2 Clip 2 — Tell EF to use the private backing field '_lines' for the Lines navigation.
-        //builder.Navigation(o => o.Lines)
-        //    .HasField("_lines");
+        builder.Navigation(o => o.Lines)
+            .HasField("_lines");
 
         // OrderId is a shadow FK from day one — OrderLine has no CLR OrderId property.
         // This is the reference example for Clip 5: the same pattern applied to Order.CustomerId.

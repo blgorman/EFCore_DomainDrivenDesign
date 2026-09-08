@@ -26,23 +26,20 @@ public class OrderShippedEventHandler : IDomainEventHandler<OrderShippedEvent>
 
     public async Task HandleAsync(OrderShippedEvent domainEvent, CancellationToken ct = default)
     {
-        //TODO: Module 5 Clip 4 — Uncomment the implementation below:
-        //var shipment = await _shippingContext.Shipments
-        //    .FirstOrDefaultAsync(s => s.Id == domainEvent.OrderId, ct);
-        //
-        //if (shipment is not null)
-        //{
-        //    _logger.LogInformation(
-        //        "ShippingContext projection — Order {OrderId}: Status={Status}, PlacedAt={PlacedAt}",
-        //        shipment.Id, shipment.Status, shipment.PlacedAt);
-        //}
-        //else
-        //{
-        //    _logger.LogWarning(
-        //        "ShippingContext could not find a projection for Order {OrderId}",
-        //        domainEvent.OrderId);
-        //}
+        var shipment = await _shippingContext.Shipments
+            .FirstOrDefaultAsync(s => s.Id == domainEvent.OrderId, ct);
 
-        await Task.CompletedTask;
+        if (shipment is not null)
+        {
+            _logger.LogInformation(
+                "ShippingContext projection — Order {OrderId}: Status={Status}, PlacedAt={PlacedAt}",
+                shipment.Id, shipment.Status, shipment.PlacedAt);
+        }
+        else
+        {
+            _logger.LogWarning(
+                "ShippingContext could not find a projection for Order {OrderId}",
+                domainEvent.OrderId);
+        }
     }
 }

@@ -14,8 +14,7 @@ public class OrderCancelledEventHandler : IDomainEventHandler<OrderCancelledEven
 
     public async Task HandleAsync(OrderCancelledEvent domainEvent, CancellationToken ct = default)
     {
-        //TODO: Module 5 Clip 4 — Uncomment the log line below:
-        //_logger.LogInformation("Order cancelled: {OrderId} at {CancelledAt}", domainEvent.OrderId, domainEvent.CancelledAt);
+        _logger.LogInformation("Order cancelled: {OrderId} at {CancelledAt}", domainEvent.OrderId, domainEvent.CancelledAt);
         await Task.CompletedTask;
     }
 

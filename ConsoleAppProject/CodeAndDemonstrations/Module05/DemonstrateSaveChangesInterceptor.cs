@@ -135,32 +135,21 @@ public static class DemonstrateSaveChangesInterceptor
 
         var savedOrder = await context.Orders.FindAsync(order.Id);
 
-        //TODO: Module 5 Clip 3 — Delete this Not Yet Implemented box:
+
         Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
+            "Interceptor Has Fired — Verified Results",
             new[]
             {
-                "This demo will work after completing Module 5 Clip 3.",
-                "Open DemonstrateSaveChangesInterceptor.cs and uncomment the //TODO: Module 5 Clip 3 block.",
-                "Prerequisite: DomainEventDispatchInterceptor.SavedChangesAsync must be implemented."
+                $"Events remaining on aggregate:  {order.DomainEvents.Count}  — ClearEvents() was called",
+                $"DB row found via FindAsync:      {savedOrder is not null}",
+                $"Saved Order Id:                 {savedOrder?.Id}",
+                "",
+                "The interceptor ran SavedChangesAsync — AFTER the commit.",
+                "DB write is final before any handler runs.",
+                "If the handler had thrown, the DB row would still exist — no rollback.",
+                "(See Clip 5 for the pre-save vs post-save trade-off comparison.)"
             }
         ));
-
-        //TODO: Module 5 Clip 3 — Uncomment the verified-results box below:
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Interceptor Has Fired — Verified Results",
-        //    new[]
-        //    {
-        //        $"Events remaining on aggregate:  {order.DomainEvents.Count}  — ClearEvents() was called",
-        //        $"DB row found via FindAsync:      {savedOrder is not null}",
-        //        $"Saved Order Id:                 {savedOrder?.Id}",
-        //        "",
-        //        "The interceptor ran SavedChangesAsync — AFTER the commit.",
-        //        "DB write is final before any handler runs.",
-        //        "If the handler had thrown, the DB row would still exist — no rollback.",
-        //        "(See Clip 5 for the pre-save vs post-save trade-off comparison.)"
-        //    }
-        //));
 
         // Silent cleanup
         repo.Remove(savedOrder!);
