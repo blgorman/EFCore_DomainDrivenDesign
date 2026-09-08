@@ -135,74 +135,63 @@ public static class DemonstrateGenericRepoAntiPattern
 
         // --- PART 3b: Problem 1 in production — the lost update ---
         OutputHelpers.WriteColored(OutputHelpers.SectionBanner("Part 3b: The Lost Update — UpdateAsync Overwrites Another User's Change"), ConsoleColor.DarkBlue);
-        //TODO: Module 4 Clip 1 — Delete the "Not Yet Implemented" box below.
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[]
-            {
-                "This screen will work after completing Module 4 Clip 1.",
-                "Open DemonstrateGenericRepoAntiPattern.cs and uncomment the two",
-                "//TODO: Module 4 Clip 1 blocks: the lost-update walkthrough and ReadStatusAsync."
-            }
-        ));
 
-        //TODO: Module 4 Clip 1 — Uncomment the lost-update walkthrough below.
-        //using (var scopeA = serviceProvider.CreateScope())
-        //{
-        //    var ctxA  = scopeA.ServiceProvider.GetRequiredService<OrderingContext>();
-        //    var repoA = new GenericRepository<Order>(ctxA);
-        //
-        //    // Our code loads the order and holds it.
-        //    var staleOrder       = await repoA.GetByIdAsync(orderId);
-        //    var statusWhenLoaded = staleOrder!.Status;
-        //
-        //    // A shipping clerk ships the same order from a completely separate scope.
-        //    using (var clerkScope = serviceProvider.CreateScope())
-        //    {
-        //        var clerkCtx   = clerkScope.ServiceProvider.GetRequiredService<OrderingContext>();
-        //        var clerkOrder = await clerkCtx.Orders.FirstAsync(o => o.Id == orderId);
-        //        clerkOrder.Process();
-        //        clerkOrder.Confirm();
-        //        clerkOrder.Ship();
-        //        await clerkCtx.SaveChangesAsync();
-        //    }
-        //
-        //    var statusAfterClerk = await ReadStatusAsync(serviceProvider, orderId);
-        //
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "Two users, one order",
-        //        new[]
-        //        {
-        //            $"Our code loaded order {orderId} and still holds Status = {statusWhenLoaded}.",
-        //            $"The shipping clerk saved order {orderId}, so the database now holds Status = {statusAfterClerk}.",
-        //            "",
-        //            "Our copy is stale, and our code never touched Status."
-        //        }
-        //    ));
-        //
-        //    //----------------------------------------------------------------//
-        //    Console.WriteLine();
-        //    InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
-        //    Console.WriteLine();
-        //    //----------------------------------------------------------------//
-        //
-        //    await repoA.UpdateAsync(staleOrder);
-        //    await repoA.SaveChangesAsync();
-        //
-        //    var statusAfterOurSave = await ReadStatusAsync(serviceProvider, orderId);
-        //
-        //    Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //        "After our UpdateAsync and SaveChangesAsync",
-        //        new[]
-        //        {
-        //            $"The database now holds Status = {statusAfterOurSave}.",
-        //            "",
-        //            "UpdateAsync flagged every column, and Status was one of them.",
-        //            $"SaveChanges wrote our stale {statusWhenLoaded} over the clerk's {statusAfterClerk}.",
-        //            "The shipment is gone from the database, and no exception was raised."
-        //        }
-        //    ));
-        //}
+        using (var scopeA = serviceProvider.CreateScope())
+        {
+            var ctxA  = scopeA.ServiceProvider.GetRequiredService<OrderingContext>();
+            var repoA = new GenericRepository<Order>(ctxA);
+
+            // Our code loads the order and holds it.
+            var staleOrder       = await repoA.GetByIdAsync(orderId);
+            var statusWhenLoaded = staleOrder!.Status;
+
+            // A shipping clerk ships the same order from a completely separate scope.
+            using (var clerkScope = serviceProvider.CreateScope())
+            {
+                var clerkCtx   = clerkScope.ServiceProvider.GetRequiredService<OrderingContext>();
+                var clerkOrder = await clerkCtx.Orders.FirstAsync(o => o.Id == orderId);
+                clerkOrder.Process();
+                clerkOrder.Confirm();
+                clerkOrder.Ship();
+                await clerkCtx.SaveChangesAsync();
+            }
+
+            var statusAfterClerk = await ReadStatusAsync(serviceProvider, orderId);
+
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "Two users, one order",
+                new[]
+                {
+                    $"Our code loaded order {orderId} and still holds Status = {statusWhenLoaded}.",
+                    $"The shipping clerk saved order {orderId}, so the database now holds Status = {statusAfterClerk}.",
+                    "",
+                    "Our copy is stale, and our code never touched Status."
+                }
+            ));
+
+            //----------------------------------------------------------------//
+            Console.WriteLine();
+            InputHelpers.WaitForUserInput(ConsoleColor.DarkYellow);
+            Console.WriteLine();
+            //----------------------------------------------------------------//
+
+            await repoA.UpdateAsync(staleOrder);
+            await repoA.SaveChangesAsync();
+
+            var statusAfterOurSave = await ReadStatusAsync(serviceProvider, orderId);
+
+            Console.Write(OutputHelpers.BoxedArrayWithTitle(
+                "After our UpdateAsync and SaveChangesAsync",
+                new[]
+                {
+                    $"The database now holds Status = {statusAfterOurSave}.",
+                    "",
+                    "UpdateAsync flagged every column, and Status was one of them.",
+                    $"SaveChanges wrote our stale {statusWhenLoaded} over the clerk's {statusAfterClerk}.",
+                    "The shipment is gone from the database, and no exception was raised."
+                }
+            ));
+        }
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -316,13 +305,12 @@ public static class DemonstrateGenericRepoAntiPattern
         ));
     }
 
-    //TODO: Module 4 Clip 1 — Uncomment the ReadStatusAsync helper below.
-    //private static async Task<OrderManagement.Domain.Enums.OrderStatus> ReadStatusAsync(
-    //    IServiceProvider serviceProvider, int orderId)
-    //{
-    //    using var scope = serviceProvider.CreateScope();
-    //    var ctx = scope.ServiceProvider.GetRequiredService<OrderingContext>();
-    //    var order = await ctx.Orders.AsNoTracking().FirstAsync(o => o.Id == orderId);
-    //    return order.Status;
-    //}
+    private static async Task<OrderManagement.Domain.Enums.OrderStatus> ReadStatusAsync(
+        IServiceProvider serviceProvider, int orderId)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<OrderingContext>();
+        var order = await ctx.Orders.AsNoTracking().FirstAsync(o => o.Id == orderId);
+        return order.Status;
+    }
 }
