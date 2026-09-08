@@ -57,11 +57,8 @@ public class Program
 
                 // Read-side context — separate migration history
                 services.AddDbContext<ShippingContext>(options =>
-                    //TODO: Module 3 Clip 8 — Add MigrationsHistoryTable so ShippingContext tracks its migrations
-                    // independently from OrderingContext in a separate __EFMigrationsHistory_Shipping table.
-                    //options.UseSqlServer(connectionString,
-                    //    o => o.MigrationsHistoryTable("__EFMigrationsHistory_Shipping")));
-                    options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString,
+                        o => o.MigrationsHistoryTable("__EFMigrationsHistory_Shipping")));
 
                 // Repository and handlers
                 services.AddScoped<IOrderRepository, OrderRepository>();

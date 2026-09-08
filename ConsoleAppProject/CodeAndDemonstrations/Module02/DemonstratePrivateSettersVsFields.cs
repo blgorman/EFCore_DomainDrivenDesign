@@ -38,8 +38,7 @@ public static class DemonstratePrivateSettersVsFields
             new[] { (SeedDataHelper.Product1Id, 1, Money.Create(15m, "USD")) }
         );
 
-        //TODO: Module 2 Clip 3 — After making Status private set, comment this line out (it will be a compile error).
-        order.Status = OrderStatus.Shipped; // Status is currently public set — external code can bypass domain methods
+        //order.Status = OrderStatus.Shipped; // Status is currently public set — external code can bypass domain methods
         order.Process();
         order.Confirm();
         order.Ship();
@@ -56,10 +55,8 @@ public static class DemonstratePrivateSettersVsFields
                 "",
                 "State is fully set by domain methods — EF has not been called yet.",
                 "CustomerId will become a shadow property in Clip 5.",
-                //TODO: Module 2 Clip 3 — After making Status private set, uncomment these two lines and delete the placeholder below:
-                //"order.Status = OrderStatus.Shipped — that line above is now commented out (private set is a compile error).",
-                //"Status changes only through domain methods: Process, Confirm, Ship, Cancel.",
-                "[TODO Clip 3] Status is public set — make it private, then uncomment lines above and delete this one."
+                "order.Status = OrderStatus.Shipped — that line above is now commented out (private set is a compile error).",
+                "Status changes only through domain methods: Process, Confirm, Ship, Cancel."
             }
         ));
 
@@ -69,8 +66,7 @@ public static class DemonstratePrivateSettersVsFields
 
         //add (persist) the order.
         ctxA.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctxA.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctxA.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctxA.SaveChangesAsync();
 
         //get the id of the saved order to demonstrate that EF persisted and reloaded the Status value correctly, even though it has a private setter.
@@ -103,9 +99,7 @@ public static class DemonstratePrivateSettersVsFields
                 $"PlacedAt:   {order.PlacedAt:u}",
                 $"Reloaded Status:      {reloaded!.Status}",
                 "  -> EF persisted and restored the value through the private setter.",
-                //TODO: Module 2 Clip 3 — After making Status private set, uncomment the line below and delete the placeholder:
-                //"  -> order.Status = ... direct assignment is now a compile error (private set enforced).",
-                "  -> [TODO Clip 3] Make Status private set; then uncomment line above and delete this one.",
+                "  -> order.Status = ... direct assignment is now a compile error (private set enforced).",
                 "  -> Only domain methods (Ship, Cancel) can change Status — invariant enforced."
             }
         ));
@@ -149,8 +143,7 @@ public static class DemonstratePrivateSettersVsFields
         //-----------------------------------------------------------------
 
         ctxB.Orders.Add(order);
-        //TODO: Module 2 Clip 5 — After making CustomerId a shadow property, set it here before saving:
-        //ctxB.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
+        ctxB.Entry(order).Property<int>("CustomerId").CurrentValue = SeedDataHelper.CustomerAId;
         await ctxB.SaveChangesAsync();
 
         var savedId = order.Id;

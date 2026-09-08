@@ -29,25 +29,20 @@ public static class DemonstrateDynamicSpecComposition
         var specOrderSearchNoFilters = new OrderSearchSpecification(null, null);
         var allOrders                = await repository.ListAsync(specOrderSearchNoFilters);
 
-        //TODO: Module 6 Clip 6 — remove this block and uncomment the no-filters block below
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[] { "Implement TODO: Module 6 Clip 6 — add conditional Where clauses to OrderSearchSpecification" }
-        ));
 
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "OrderSearchSpecification(null, null) — No Filters Active",
-        //    new[]
-        //    {
-        //        "status:   null  — no Status WHERE clause added",
-        //        "minLines: null  — no line count WHERE clause added",
-        //        "",
-        //        $"Orders returned: {allOrders.Count}  (all orders in database)",
-        //        "",
-        //        "The spec still ran through the evaluator — it just had no Where clauses.",
-        //        "No branching in the repository. No special-case code for the empty filter."
-        //    }
-        //));
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "OrderSearchSpecification(null, null) — No Filters Active",
+            new[]
+            {
+                "status:   null  — no Status WHERE clause added",
+                "minLines: null  — no line count WHERE clause added",
+                "",
+                $"Orders returned: {allOrders.Count}  (all orders in database)",
+                "",
+                "The spec still ran through the evaluator — it just had no Where clauses.",
+                "No branching in the repository. No special-case code for the empty filter."
+            }
+        ));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -63,32 +58,27 @@ public static class DemonstrateDynamicSpecComposition
         var specOrderSearchPlacedStatus = new OrderSearchSpecification(OrderStatus.Placed, null);
         var placedOrders                = await repository.ListAsync(specOrderSearchPlacedStatus);
 
-        //TODO: Module 6 Clip 6 — remove this block and uncomment the status-filter block below
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[] { "Implement TODO: Module 6 Clip 6 — add conditional Where clauses to OrderSearchSpecification" }
-        ));
 
-        //var placedOrderRows = placedOrders.Select(o =>
-        //    $"    Id={o.Id}  Status={o.Status,-10}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
-        //    .ToArray();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"OrderSearchSpecification(Placed, null) — {placedOrders.Count} result(s)",
-        //    new[]
-        //    {
-        //        "status:   Placed  — WHERE o.Status == Placed added",
-        //        "minLines: null    — no line count filter",
-        //        "---"
-        //    }
-        //    .Concat(placedOrderRows)
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "Only one .Where() clause was added — the minLines clause was skipped."
-        //    })
-        //    .ToArray()
-        //));
+        var placedOrderRows = placedOrders.Select(o =>
+            $"    Id={o.Id}  Status={o.Status,-10}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
+            .ToArray();
+
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            $"OrderSearchSpecification(Placed, null) — {placedOrders.Count} result(s)",
+            new[]
+            {
+                "status:   Placed  — WHERE o.Status == Placed added",
+                "minLines: null    — no line count filter",
+                "---"
+            }
+            .Concat(placedOrderRows)
+            .Concat(new[]
+            {
+                "---",
+                "Only one .Where() clause was added — the minLines clause was skipped."
+            })
+            .ToArray()
+        ));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -104,33 +94,28 @@ public static class DemonstrateDynamicSpecComposition
         var specOrderSearchPlacedWithMultipleLines = new OrderSearchSpecification(OrderStatus.Placed, 2);
         var placedMultiLineOrders                  = await repository.ListAsync(specOrderSearchPlacedWithMultipleLines);
 
-        //TODO: Module 6 Clip 6 — remove this block and uncomment the both-filters block below
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[] { "Implement TODO: Module 6 Clip 6 — add conditional Where clauses to OrderSearchSpecification" }
-        ));
 
-        //var placedMultiLineOrderRows = placedMultiLineOrders.Select(o =>
-        //    $"    Id={o.Id}  Status={o.Status,-10}  Lines={o.Lines.Count}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
-        //    .ToArray();
-        //
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    $"OrderSearchSpecification(Placed, 2) — {placedMultiLineOrders.Count} result(s)",
-        //    new[]
-        //    {
-        //        "status:   Placed  — WHERE o.Status == Placed",
-        //        "minLines: 2       — AND o.Lines.Count >= 2",
-        //        "---"
-        //    }
-        //    .Concat(placedMultiLineOrderRows)
-        //    .Concat(new[]
-        //    {
-        //        "---",
-        //        "Both .Where() clauses were added — the evaluator ANDed them together.",
-        //        "One spec class handled all three scenarios with no repository changes."
-        //    })
-        //    .ToArray()
-        //));
+        var placedMultiLineOrderRows = placedMultiLineOrders.Select(o =>
+            $"    Id={o.Id}  Status={o.Status,-10}  Lines={o.Lines.Count}  PlacedAt={o.PlacedAt:yyyy-MM-dd}")
+            .ToArray();
+
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            $"OrderSearchSpecification(Placed, 2) — {placedMultiLineOrders.Count} result(s)",
+            new[]
+            {
+                "status:   Placed  — WHERE o.Status == Placed",
+                "minLines: 2       — AND o.Lines.Count >= 2",
+                "---"
+            }
+            .Concat(placedMultiLineOrderRows)
+            .Concat(new[]
+            {
+                "---",
+                "Both .Where() clauses were added — the evaluator ANDed them together.",
+                "One spec class handled all three scenarios with no repository changes."
+            })
+            .ToArray()
+        ));
 
         //----------------------------------------------------------------//
         Console.WriteLine();
@@ -143,24 +128,19 @@ public static class DemonstrateDynamicSpecComposition
             OutputHelpers.SectionBanner("Step 4 — Why Dynamic Composition Matters"),
             ConsoleColor.DarkBlue);
 
-        //TODO: Module 6 Clip 6 — remove this block and uncomment the benefits-summary block below
-        Console.Write(OutputHelpers.BoxedArrayWithTitle(
-            "Not Yet Implemented",
-            new[] { "Implement TODO: Module 6 Clip 6 — add conditional Where clauses to OrderSearchSpecification" }
-        ));
 
-        //Console.Write(OutputHelpers.BoxedArrayWithTitle(
-        //    "Dynamic Composition — Key Benefits",
-        //    new[]
-        //    {
-        //        $"No filters:               {allOrders.Count} orders — no WHERE added",
-        //        $"Status only:              {placedOrders.Count} orders — 1 WHERE added",
-        //        $"Status + min lines:       {placedMultiLineOrders.Count} orders — 2 WHEREs added",
-        //        "",
-        //        "One specification class handled all three combinations.",
-        //        "repository.ListAsync(spec) is the same call in every scenario."
-        //    }
-        //));
+        Console.Write(OutputHelpers.BoxedArrayWithTitle(
+            "Dynamic Composition — Key Benefits",
+            new[]
+            {
+                $"No filters:               {allOrders.Count} orders — no WHERE added",
+                $"Status only:              {placedOrders.Count} orders — 1 WHERE added",
+                $"Status + min lines:       {placedMultiLineOrders.Count} orders — 2 WHEREs added",
+                "",
+                "One specification class handled all three combinations.",
+                "repository.ListAsync(spec) is the same call in every scenario."
+            }
+        ));
 
         await Task.CompletedTask;
     }
